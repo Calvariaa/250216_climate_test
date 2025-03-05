@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://cyt6inj0uxg4l"]
+
+[ext_resource type="Script" uid="uid://doqohjd4chvwt" path="res://Scripts/cs/Node3d.cs" id="1_wosnj"]
+[ext_resource type="Script" uid="uid://dvqcx68meyco6" path="res://Scripts/cs/MeshInstance3d.cs" id="2_okq71"]
+[ext_resource type="PackedScene" uid="uid://citegdu3dcor5" path="res://Nodes/Node3d.tscn" id="3_t3l2h"]
+[ext_resource type="Script" uid="uid://cguifpylnb1u0" path="res://Scripts/gd/camera_node_3d.gd" id="3_wosnj"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_okq71"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_okq71")
+script = ExtResource("2_okq71")
+
+[node name="Node3D" type="Node3D" parent="."]
+script = ExtResource("1_wosnj")
+cellScene = ExtResource("3_t3l2h")
+
+[node name="CameraNode3D" type="Node3D" parent="."]
+script = ExtResource("3_wosnj")
+
+[node name="Camera3D" type="Camera3D" parent="CameraNode3D"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 1, 2)
+
+[node name="CameraLightNode3D" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, -0.5, 0.866025, -2.18557e-08, -0.866025, -0.5, -3.78552e-08, 0, 1, 2)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="CameraLightNode3D"]
