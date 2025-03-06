@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://citegdu3dcor5"]
 
-[ext_resource type="Script" uid="uid://dvqcx68meyco6" path="res://Scripts/cs/MeshInstance3d.cs" id="1_nkj5p"]
+[ext_resource type="Script" uid="uid://dvqcx68meyco6" path="res://Scripts/MeshInstance3d.cs" id="1_nkj5p"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nkj5p"]
 
