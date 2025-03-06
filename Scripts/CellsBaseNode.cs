@@ -88,50 +88,69 @@ public partial class CellsBaseNode : Node
 			}
 		}
 
-		switch (_mapType)
+		// Test Method
+		// for (int i = 0; i < temperCalc.Length; i++)
+		// {
+		// 	cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(0, i, 0).Temperature = -120;
+		// }
+
+		// for (int i = 0; i < temperCalc.Length; i++)
+		// {
+		// 	cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(i, 0, 0).Temperature = 120;
+		// }
+
+
+		for (int x = 0; x < temperCalc.Length; x++)
 		{
-			case MapType.temperCalcDistribution:
-				for (int x = 0; x < temperCalc.Length; x++)
-				{
-					for (int y = 0; y < temperCalc.Length; y++)
-					{
-						// Left
-						cellsMesh[0, x, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Left].Surface.Cell(x, y, 0).Temperature;
-						// Down
-						cellsMesh[x, 0, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Down].Surface.Cell(x, y, 0).Temperature;
-						// Backward
-						cellsMesh[x, y, 0].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Backward].Surface.Cell(x, y, 0).Temperature;
-						// Right
-						cellsMesh[Length - 1, x, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Right].Surface.Cell(x, y, 0).Temperature;
-						// Up
-						cellsMesh[x, Length - 1, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(x, y, 0).Temperature;
-						// Forward
-						cellsMesh[x, y, Length - 1].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Forward].Surface.Cell(x, y, 0).Temperature;
-					}
-				}
-
-				break;
-				// case MapType.temperCalcChangeDistribution:
-				//     for (int x = 0; x < temperCalc.Length; x++)
-				//     {
-				//         for (int y = 0; y < temperCalc.Length; y++)
-				//         {
-				//             cellsMesh[x, 0, y].Temperature = (float)cellsDerivative[x, y];
-				//         }
-				//     }
-
-				//     break;
-				// case MapType.temperCalcAnomalyDistribution:
-				//     for (int x = 0; x < temperCalc.Length; x++)
-				//     {
-				//         for (int y = 0; y < temperCalc.Length; y++)
-				//         {
-				//             cells[x, 0, y].temperCalc = (float)cellsAnomaly[x, y];
-				//         }
-				//     }
-
-				//     break;
+			for (int y = 0; y < temperCalc.Length; y++)
+			{
+				// Left
+				cellsMesh[0, x, y].Temperature =
+					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Left].Surface.Cell(x, y, 0).Temperature;
+				// Down
+				cellsMesh[x, 0, y].Temperature =
+					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Down].Surface.Cell(x, y, 0).Temperature;
+				// Backward
+				cellsMesh[x, y, 0].Temperature =
+					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Backward].Surface.Cell(x, y, 0).Temperature;
+				// Right
+				cellsMesh[Length - 1, x, y].Temperature =
+					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Right].Surface.Cell(x, y, 0).Temperature;
+				// Up
+				cellsMesh[x, Length - 1, y].Temperature =
+					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(x, y, 0).Temperature;
+				// Forward
+				cellsMesh[x, y, Length - 1].Temperature =
+					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Forward].Surface.Cell(x, y, 0).Temperature;
+			}
 		}
+
+		// switch (_mapType)
+		// {
+		// 	case MapType.temperCalcDistribution:
+
+		// 		break;
+		// 		// case MapType.temperCalcChangeDistribution:
+		// 		//     for (int x = 0; x < temperCalc.Length; x++)
+		// 		//     {
+		// 		//         for (int y = 0; y < temperCalc.Length; y++)
+		// 		//         {
+		// 		//             cellsMesh[x, 0, y].Temperature = (float)cellsDerivative[x, y];
+		// 		//         }
+		// 		//     }
+
+		// 		//     break;
+		// 		// case MapType.temperCalcAnomalyDistribution:
+		// 		//     for (int x = 0; x < temperCalc.Length; x++)
+		// 		//     {
+		// 		//         for (int y = 0; y < temperCalc.Length; y++)
+		// 		//         {
+		// 		//             cells[x, 0, y].temperCalc = (float)cellsAnomaly[x, y];
+		// 		//         }
+		// 		//     }
+
+		// 		//     break;
+		// }
 
 	}
 
