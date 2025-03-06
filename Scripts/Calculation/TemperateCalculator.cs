@@ -2,11 +2,11 @@ using Godot;
 using static Godot.GD;
 namespace _Climate.Scripts;
 
-public class TemperatureCalculator(int length, double alpha, SurfaceCells cells)
+public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells surfaceAreaCells)
 {
 	public readonly int Length = length;
 	public readonly double Alpha = alpha;
-	public SurfaceCells Cells = cells;
+	public SurfaceCells Cells = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface;
 	private uint _averageCount = 0;
 
 	public void Calculate(double delta)
@@ -47,6 +47,9 @@ public class TemperatureCalculator(int length, double alpha, SurfaceCells cells)
 
 		// https://i.imgur.com/RIlJM32.png
 		// https://zhuanlan.zhihu.com/p/8616433050
+
+		// https://www.bilibili.com/opus/689834819427762213
+		// 看看六阶, 要用
 		SurfaceCells rk4(SurfaceCells cells, double dt, int width, int height, double dx2, double alpha)
 		{
 			var T = cells;

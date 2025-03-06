@@ -61,7 +61,7 @@ func _update_camera(event: InputEvent) -> void:
 
 			# rotate(Vector3(1, 0, 0), deg_to_rad(displacement.y * mouse_rotation_sensitivity))
 			# rotate(Vector3(0, 1, 0), deg_to_rad(-displacement.x * mouse_rotation_sensitivity))
-			rotate_x(deg_to_rad(displacement.y * mouse_rotation_sensitivity));
+			rotate_x(deg_to_rad(-displacement.y * mouse_rotation_sensitivity));
 			rotate_y(deg_to_rad(-displacement.x * mouse_rotation_sensitivity));
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN

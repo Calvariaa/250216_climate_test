@@ -18,7 +18,7 @@ public class Cell
 		}
 	}
 
-	public Vector3 Position { get; set; }
+	public Vector3 Position { get; set; } = new Vector3(0, 0, 0);
 
-	public string Name { get; set; }
+	public string Name { get; set; } = "Cell_";
 }

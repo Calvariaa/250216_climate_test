@@ -1,18 +1,14 @@
-using Godot;
-using static Godot.GD;
-
 namespace _Climate.Scripts;
 
 using System;
 using System.Collections.Generic;
 
-public class SurfaceArea
+public class SurfaceAreaCells
 {
 	private int Length;
-	private int Depth;
 
 	// 体表包含6个面
-	private enum Orientation
+	public enum Orientation : int
 	{
 		Up = 0,
 		Down,
@@ -23,7 +19,7 @@ public class SurfaceArea
 	}
 
 	// 每个面有4个邻接的面
-	private enum Direction
+	public enum Direction : int
 	{
 		Up = 0,
 		Down,
@@ -32,7 +28,7 @@ public class SurfaceArea
 	}
 
 	// 名字太长了但是不这样写enum就得强制转换为int做数组下标我讨厌你
-	private class SurfaceCellsOrientationArray<TEnum, TValue>
+	public class SurfaceCellsOrientationArray<TEnum, TValue>
 		where TEnum : Enum
 	{
 		private TValue[] array = new TValue[Enum.GetValues(typeof(TEnum)).Length];
@@ -46,15 +42,15 @@ public class SurfaceArea
 	}
 
 	// 链表节点的类定义，他被用来连接六个面和他们的旋转对应关系，链表包含四个属性分别是上下左右四个方向的邻居节点和其为了对齐当前节点所需的旋转角度
-	private class SurfaceCellNode
+	public class SurfaceCellNode
 	{
 		// 6个表面
-		public SurfaceCellsOrientationArray<Orientation, SurfaceCells> Surface { get; set; }
+		public SurfaceCells Surface;
 
 		// 4个邻接面
 		public Dictionary<Direction, (SurfaceCellNode Node, int Rotation)> Neighbors { get; set; }
 
-		public SurfaceCellNode(SurfaceCellsOrientationArray<Orientation, SurfaceCells> surface)
+		public SurfaceCellNode(SurfaceCells surface)
 		{
 			Surface = surface;
 			Neighbors = new Dictionary<Direction, (SurfaceCellNode, int)>();
@@ -62,18 +58,17 @@ public class SurfaceArea
 	}
 
 	// 6个面
-	private SurfaceCellsOrientationArray<Orientation, SurfaceCellNode> surfaceCellNodes =
+	public SurfaceCellsOrientationArray<Orientation, SurfaceCellNode> surfaceCellNodes =
 		new SurfaceCellsOrientationArray<Orientation, SurfaceCellNode>();
 
-	public SurfaceArea(int length, int depth)
+	public SurfaceAreaCells(int length)
 	{
 		Length = length;
-		Depth = depth;
 
 		foreach (Orientation dir in Enum.GetValues(typeof(Orientation)))
 		{
 			surfaceCellNodes[dir] = new SurfaceCellNode(
-				new SurfaceCellsOrientationArray<Orientation, SurfaceCells>()
+				new SurfaceCells(Length)
 			);
 		}
 

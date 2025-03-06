@@ -14,7 +14,7 @@ public partial class CellsBaseNode : Node
 	MeshInstance3d[,,] cellsMesh;
 
 	private TemperatureCalculator temperCalc;
-	private SurfaceCells cells;
+	private SurfaceAreaCells cells;
 
 	// 温度分布图，变温分布图，气温距平分布图
 	private enum MapType
@@ -32,7 +32,7 @@ public partial class CellsBaseNode : Node
 	public override void _Ready()
 	{
 
-		cells = new SurfaceCells(Length, "TestCell");
+		cells = new SurfaceAreaCells(Length);
 		cellsMesh = new MeshInstance3d[Length, Length, Length];
 		cellPrefab = cellScene.Instantiate<MeshInstance3D>();
 
@@ -82,7 +82,7 @@ public partial class CellsBaseNode : Node
 				{
 					if (Mathf.Pow(x - width, 2) + Mathf.Pow(y - height, 2) < radius)
 					{
-						cells.Cell(x, y, 0).Temperature = temperature;
+						cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(x, y, 0).Temperature = temperature;
 					}
 				}
 			}
@@ -95,15 +95,18 @@ public partial class CellsBaseNode : Node
 				{
 					for (int y = 0; y < temperCalc.Length; y++)
 					{
-						// cellsMesh[0, x, y].Temperature = -60;
-						// GD.Print(cellsMesh[0, x, y].Temperature);
-						// GD.Print(cells.Cell(x, y, 0));
-						cellsMesh[0, x, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, 0, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, y, 0].Temperature = (float)cells.Cell(x, y, 0).Temperature;
-						cellsMesh[Length - 1, x, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, Length - 1, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, y, Length - 1].Temperature = (float)cells.Cell(x, y, 0).Temperature;
+						// Left
+						cellsMesh[0, x, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Left].Surface.Cell(x, y, 0).Temperature;
+						// Down
+						cellsMesh[x, 0, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Down].Surface.Cell(x, y, 0).Temperature;
+						// Backward
+						cellsMesh[x, y, 0].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Backward].Surface.Cell(x, y, 0).Temperature;
+						// Right
+						cellsMesh[Length - 1, x, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Right].Surface.Cell(x, y, 0).Temperature;
+						// Up
+						cellsMesh[x, Length - 1, y].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(x, y, 0).Temperature;
+						// Forward
+						cellsMesh[x, y, Length - 1].Temperature = (float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Forward].Surface.Cell(x, y, 0).Temperature;
 					}
 				}
 

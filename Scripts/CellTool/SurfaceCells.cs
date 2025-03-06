@@ -4,13 +4,11 @@ namespace _Climate.Scripts;
 public class SurfaceCells
 {
 	private int Length;
-	private string Name;
 	private Cell[,] cells;
 
-	public SurfaceCells(int length, string name)
+	public SurfaceCells(int length)
 	{
 		Length = length;
-		Name = name;
 		cells = new Cell[length, length];
 		InitializeCells();
 	}
@@ -21,12 +19,7 @@ public class SurfaceCells
 		{
 			for (int j = 0; j < Length; j++)
 			{
-				cells[i, j] = new Cell
-				{
-					Temperature = 0,
-					Position = new Vector3(0, 0, 0),
-					Name = $"Cell_{Name}_{i}_{j}"
-				};
+				cells[i, j] = new Cell();
 			}
 		}
 	}
@@ -50,7 +43,7 @@ public class SurfaceCells
 
 	public SurfaceCells Clone()
 	{
-		SurfaceCells clone = new SurfaceCells(Length, Name);
+		SurfaceCells clone = new SurfaceCells(Length);
 		for (int i = 0; i < Length; i++)
 		{
 			for (int j = 0; j < Length; j++)
@@ -58,8 +51,7 @@ public class SurfaceCells
 				clone.cells[i, j] = new Cell
 				{
 					Temperature = cells[i, j].Temperature,
-					Position = cells[i, j].Position,
-					Name = cells[i, j].Name
+					Position = cells[i, j].Position
 				};
 			}
 		}
