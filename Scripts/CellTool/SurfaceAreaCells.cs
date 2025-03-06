@@ -55,6 +55,25 @@ public class SurfaceAreaCells
 			Surface = surface;
 			Neighbors = new Dictionary<Direction, (SurfaceCellNode, int)>();
 		}
+
+		// 深拷贝
+		public SurfaceCellNode Clone()
+		{
+			SurfaceCells clonedSurface = Surface.Clone();
+
+			SurfaceCellNode clone = new SurfaceCellNode(clonedSurface);
+
+			foreach (var entry in Neighbors)
+			{
+				Direction direction = entry.Key;
+				SurfaceCellNode neighborNode = entry.Value.Node;
+				int rotation = entry.Value.Rotation;
+
+				clone.Neighbors[direction] = (neighborNode.Clone(), rotation);
+			}
+
+			return clone;
+		}
 	}
 
 	// 6个面
@@ -138,5 +157,21 @@ public class SurfaceAreaCells
 				currentNode.Neighbors[dir] = (surfaceCellNodes[neighborFace], rotation);
 			}
 		}
+	}
+
+	public SurfaceAreaCells Clone()
+	{
+		SurfaceAreaCells clone = new SurfaceAreaCells(Length);
+
+		clone.Length = this.Length;
+
+		// 复制每个面的Surface数据
+		foreach (Orientation orientation in Enum.GetValues(typeof(Orientation)))
+		{
+			clone.surfaceCellNodes[orientation] = surfaceCellNodes[orientation].Clone();
+		}
+
+
+		return clone;
 	}
 }

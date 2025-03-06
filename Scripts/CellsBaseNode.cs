@@ -67,22 +67,25 @@ public partial class CellsBaseNode : Node
 		temperCalc.Calculate(delta);
 
 		// 随机生成温度
-		if (Randf() < 0.1)
+		foreach (SurfaceAreaCells.Orientation orientation in Enum.GetValues(typeof(SurfaceAreaCells.Orientation)))
 		{
-			// cellCalculator.cells[RandRange(0, cellCalculator.width - 1), RandRange(0, cellCalculator.height - 1)]
-			//     .temperCalc = RandRange(-10, 255);
-			var radius = RandRange(1, 10);
-			var width = RandRange(radius, temperCalc.Length - radius);
-			var height = RandRange(radius, temperCalc.Length - radius);
-			var temperature = RandRange(-100, 100);
-
-			for (var x = 0; x < temperCalc.Length; x++)
+			if (Randf() < 0.1)
 			{
-				for (var y = 0; y < temperCalc.Length; y++)
+				// cellCalculator.cells[RandRange(0, cellCalculator.width - 1), RandRange(0, cellCalculator.height - 1)]
+				//     .temperCalc = RandRange(-10, 255);
+				var radius = RandRange(1, 10);
+				var width = RandRange(radius, temperCalc.Length - radius);
+				var height = RandRange(radius, temperCalc.Length - radius);
+				var temperature = RandRange(-100, 100);
+
+				for (var x = 0; x < temperCalc.Length; x++)
 				{
-					if (Mathf.Pow(x - width, 2) + Mathf.Pow(y - height, 2) < radius)
+					for (var y = 0; y < temperCalc.Length; y++)
 					{
-						cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(x, y, 0).Temperature = temperature;
+						if (Mathf.Pow(x - width, 2) + Mathf.Pow(y - height, 2) < radius)
+						{
+							cells.surfaceCellNodes[orientation].Surface.Cell(x, y, 0).Temperature = temperature;
+						}
 					}
 				}
 			}

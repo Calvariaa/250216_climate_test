@@ -9,7 +9,12 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 
 	public SurfaceAreaCells AreaCells = surfaceAreaCells;
 
-	public SurfaceAreaCells.SurfaceCellNode CellsNode = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up];
+	public SurfaceAreaCells.SurfaceCellNode CellsNodeLeft = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Left];
+	public SurfaceAreaCells.SurfaceCellNode CellsNodeDown = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Down];
+	public SurfaceAreaCells.SurfaceCellNode CellsNodeBackward = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Backward];
+	public SurfaceAreaCells.SurfaceCellNode CellsNodeRight = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Right];
+	public SurfaceAreaCells.SurfaceCellNode CellsNodeUp = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up];
+	public SurfaceAreaCells.SurfaceCellNode CellsNodeForward = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Forward];
 	// public SurfaceCells Cells = surfaceAreaCells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface;
 	private uint _averageCount = 0;
 
@@ -29,15 +34,31 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 					double d2Tdx2 = 0;
 					double d2Tdy2 = 0;
 
-					if (x > 0) d2Tdx2 += cellsNode.Surface.Cell(x - 1, y, 0).Temperature + uk[x - 1, y] * uk_delta;
-					if (x < width - 1) d2Tdx2 += cellsNode.Surface.Cell(x + 1, y, 0).Temperature + uk[x + 1, y] * uk_delta;
-					if (y > 0) d2Tdy2 += cellsNode.Surface.Cell(x, y - 1, 0).Temperature + uk[x, y - 1] * uk_delta;
-					if (y < height - 1) d2Tdy2 += cellsNode.Surface.Cell(x, y + 1, 0).Temperature + uk[x, y + 1] * uk_delta;
+					if (x > 0) d2Tdx2 +=
+						cellsNode.Surface.Cell(x - 1, y, 0).Temperature + uk[x - 1, y] * uk_delta;
+					if (x < width - 1) d2Tdx2 +=
+						cellsNode.Surface.Cell(x + 1, y, 0).Temperature + uk[x + 1, y] * uk_delta;
+					if (y > 0) d2Tdy2 +=
+						cellsNode.Surface.Cell(x, y - 1, 0).Temperature + uk[x, y - 1] * uk_delta;
+					if (y < height - 1) d2Tdy2 +=
+						cellsNode.Surface.Cell(x, y + 1, 0).Temperature + uk[x, y + 1] * uk_delta;
 
-					if (x == 0) d2Tdx2 += cellsNode.Neighbors[SurfaceAreaCells.Direction.Left].Node.Surface.Cell(width - 1, y, cellsNode.Neighbors[SurfaceAreaCells.Direction.Left].Rotation).Temperature + uk[width - 1, y] * uk_delta;
-					if (x == width - 1) d2Tdx2 += cellsNode.Neighbors[SurfaceAreaCells.Direction.Right].Node.Surface.Cell(0, y, cellsNode.Neighbors[SurfaceAreaCells.Direction.Right].Rotation).Temperature + uk[0, y] * uk_delta;
-					if (y == 0) d2Tdy2 += cellsNode.Neighbors[SurfaceAreaCells.Direction.Up].Node.Surface.Cell(x, height - 1, cellsNode.Neighbors[SurfaceAreaCells.Direction.Up].Rotation).Temperature + uk[x, height - 1] * uk_delta;
-					if (y == height - 1) d2Tdy2 += cellsNode.Neighbors[SurfaceAreaCells.Direction.Down].Node.Surface.Cell(x, 0, cellsNode.Neighbors[SurfaceAreaCells.Direction.Down].Rotation).Temperature + uk[x, 0] * uk_delta;
+					if (x == 0) d2Tdx2 +=
+						cellsNode.Neighbors[SurfaceAreaCells.Direction.Left].Node.Surface.
+							Cell(width - 1, y, cellsNode.Neighbors[SurfaceAreaCells.Direction.Left].Rotation).
+								Temperature + uk[width - 1, y] * uk_delta;
+					if (x == width - 1) d2Tdx2 +=
+						cellsNode.Neighbors[SurfaceAreaCells.Direction.Right].Node.Surface.
+							Cell(0, y, cellsNode.Neighbors[SurfaceAreaCells.Direction.Right].Rotation).
+								Temperature + uk[0, y] * uk_delta;
+					if (y == 0) d2Tdy2 +=
+						cellsNode.Neighbors[SurfaceAreaCells.Direction.Up].Node.Surface.
+							Cell(x, height - 1, cellsNode.Neighbors[SurfaceAreaCells.Direction.Up].Rotation).
+								Temperature + uk[x, height - 1] * uk_delta;
+					if (y == height - 1) d2Tdy2 +=
+						cellsNode.Neighbors[SurfaceAreaCells.Direction.Down].Node.Surface.
+							Cell(x, 0, cellsNode.Neighbors[SurfaceAreaCells.Direction.Down].Rotation).
+								Temperature + uk[x, 0] * uk_delta;
 
 					d2Tdx2 -= 2 * (cellsNode.Surface.Cell(x, y, 0).Temperature + (uk[x, y] * uk_delta));
 					d2Tdy2 -= 2 * (cellsNode.Surface.Cell(x, y, 0).Temperature + (uk[x, y] * uk_delta));
@@ -79,7 +100,12 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 		}
 
 		// 数学逼提醒了我用龙格库塔法求偏微分，让我们赞美数学逼
-		rk4(CellsNode, delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeLeft, delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeDown, delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeBackward, delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeRight, delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeUp, delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeForward, delta, Length, Length, dx2, Alpha);
 
 
 		if (_averageCount < 1000)
@@ -92,7 +118,12 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 		{
 			for (var y = 0; y < Length; y++)
 			{
-				CellsNode.Surface.Cell(x, y, 0).Temperature = 0;
+				CellsNodeLeft.Surface.Cell(x, y, 0).Temperature = 0;
+				CellsNodeDown.Surface.Cell(x, y, 0).Temperature = 0;
+				CellsNodeBackward.Surface.Cell(x, y, 0).Temperature = 0;
+				CellsNodeRight.Surface.Cell(x, y, 0).Temperature = 0;
+				CellsNodeUp.Surface.Cell(x, y, 0).Temperature = 0;
+				CellsNodeForward.Surface.Cell(x, y, 0).Temperature = 0;
 			}
 		}
 	}
