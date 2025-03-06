@@ -14,7 +14,7 @@ public partial class CellsBaseNode : Node
 	MeshInstance3d[,,] cellsMesh;
 
 	private TemperatureCalculator temperCalc;
-	private SpaceCells cells;
+	private SurfaceCells cells;
 
 	// 温度分布图，变温分布图，气温距平分布图
 	private enum MapType
@@ -32,7 +32,7 @@ public partial class CellsBaseNode : Node
 	public override void _Ready()
 	{
 
-		cells = new SpaceCells(Length, "TestCell");
+		cells = new SurfaceCells(Length, "TestCell");
 		cellsMesh = new MeshInstance3d[Length, Length, Length];
 		cellPrefab = cellScene.Instantiate<MeshInstance3D>();
 

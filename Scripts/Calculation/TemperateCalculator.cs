@@ -2,11 +2,11 @@ using Godot;
 using static Godot.GD;
 namespace _Climate.Scripts;
 
-public class TemperatureCalculator(int length, double alpha, SpaceCells cells)
+public class TemperatureCalculator(int length, double alpha, SurfaceCells cells)
 {
 	public readonly int Length = length;
 	public readonly double Alpha = alpha;
-	public SpaceCells Cells = cells;
+	public SurfaceCells Cells = cells;
 	private uint _averageCount = 0;
 
 	public void Calculate(double delta)
@@ -14,7 +14,7 @@ public class TemperatureCalculator(int length, double alpha, SpaceCells cells)
 		var dx2 = 1.0 / ((length - 1) << 1);
 
 		// 辅助函数，用于计算温度分布的导数
-		double[,] ComputeHeatEquation(SpaceCells cells, double[,] uk, double uk_delta, int width, int height, double dx2, double alpha)
+		double[,] ComputeHeatEquation(SurfaceCells cells, double[,] uk, double uk_delta, int width, int height, double dx2, double alpha)
 		{
 			uk ??= new double[width, height];
 			double[,] dTdt = new double[width, height];
@@ -47,7 +47,7 @@ public class TemperatureCalculator(int length, double alpha, SpaceCells cells)
 
 		// https://i.imgur.com/RIlJM32.png
 		// https://zhuanlan.zhihu.com/p/8616433050
-		SpaceCells rk4(SpaceCells cells, double dt, int width, int height, double dx2, double alpha)
+		SurfaceCells rk4(SurfaceCells cells, double dt, int width, int height, double dx2, double alpha)
 		{
 			var T = cells;
 

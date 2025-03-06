@@ -4,9 +4,9 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nkj5p"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_uslqw"]
+[sub_resource type="BoxMesh" id="BoxMesh_stsxw"]
 material = SubResource("ShaderMaterial_nkj5p")
 
 [node name="MeshInstance3D" type="MeshInstance3D"]
-mesh = SubResource("BoxMesh_uslqw")
+mesh = SubResource("BoxMesh_stsxw")
 script = ExtResource("1_nkj5p")
