@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class SpaceCells
 {
-	private enum Direction
+	private enum Orientation
 	{
 		Up = 0,
 		Down,
@@ -17,9 +17,17 @@ public class SpaceCells
 		Forward,
 		Backward,
 	}
+	
+	private enum Direction
+	{
+		Up = 0,
+		Down,
+		Left,
+		Right
+	}
 
 	// 名字太长了但是不这样写enum就得强制转换为int做数组下标我讨厌你
-	private class SurfaceCellsDirectionArray<TEnum, TValue>
+	private class SurfaceCellsOrientationArray<TEnum, TValue>
 		where TEnum : Enum
 	{
 		private TValue[] array = new TValue[Enum.GetValues(typeof(TEnum)).Length];
@@ -35,33 +43,33 @@ public class SpaceCells
 	// 链表连接六个面和他们的旋转对应关系反正后面会写额啊
 	private class SurfaceCellNode
 	{
-		public SurfaceCellsDirectionArray<Direction, SurfaceCells> Surface { get; set; }
-		public Dictionary<Direction, (SurfaceCellNode Node, int Rotation)> Neighbors { get; set; }
+		public SurfaceCellsOrientationArray<Orientation, SurfaceCells> Surface { get; set; }
+		public Dictionary<Orientation, (SurfaceCellNode Node, int Rotation)> Neighbors { get; set; }
 
-		public SurfaceCellNode(SurfaceCellsDirectionArray<Direction, SurfaceCells> surface)
+		public SurfaceCellNode(SurfaceCellsOrientationArray<Orientation, SurfaceCells> surface)
 		{
 			Surface = surface;
-			Neighbors = new Dictionary<Direction, (SurfaceCellNode, int)>();
+			Neighbors = new Dictionary<Orientation, (SurfaceCellNode, int)>();
 		}
 	}
 
 	private int Length;
 	private int Depth;
 
-	private SurfaceCellsDirectionArray<Direction, SurfaceCells> surfaceCells =
-		new SurfaceCellsDirectionArray<Direction, SurfaceCells>();
-	private SurfaceCellsDirectionArray<Direction, SurfaceCellNode> surfaceCellNodes =
-		new SurfaceCellsDirectionArray<Direction, SurfaceCellNode>();
+	private SurfaceCellsOrientationArray<Orientation, SurfaceCells> surfaceCells =
+		new SurfaceCellsOrientationArray<Orientation, SurfaceCells>();
+	private SurfaceCellsOrientationArray<Orientation, SurfaceCellNode> surfaceCellNodes =
+		new SurfaceCellsOrientationArray<Orientation, SurfaceCellNode>();
 
 	public SpaceCells(int length, int depth)
 	{
 		Length = length;
 		Depth = depth;
 
-		foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+		foreach (Orientation dir in Enum.GetValues(typeof(Orientation)))
 		{
 			surfaceCellNodes[dir] = new SurfaceCellNode(
-				new SurfaceCellsDirectionArray<Direction, SurfaceCells>()
+				new SurfaceCellsOrientationArray<Orientation, SurfaceCells>()
 			);
 		}
 
@@ -71,110 +79,110 @@ public class SpaceCells
 	private void SetNeighbors()
 	{
 		// Up
-		surfaceCellNodes[Direction.Up].Neighbors[Direction.Forward] = (
-			surfaceCellNodes[Direction.Forward],
+		surfaceCellNodes[Orientation.Up].Neighbors[Orientation.Forward] = (
+			surfaceCellNodes[Orientation.Forward],
 			0
 		);
-		surfaceCellNodes[Direction.Up].Neighbors[Direction.Right] = (
-			surfaceCellNodes[Direction.Right],
+		surfaceCellNodes[Orientation.Up].Neighbors[Orientation.Right] = (
+			surfaceCellNodes[Orientation.Right],
 			0
 		);
-		surfaceCellNodes[Direction.Up].Neighbors[Direction.Backward] = (
-			surfaceCellNodes[Direction.Backward],
+		surfaceCellNodes[Orientation.Up].Neighbors[Orientation.Backward] = (
+			surfaceCellNodes[Orientation.Backward],
 			0
 		);
-		surfaceCellNodes[Direction.Up].Neighbors[Direction.Left] = (
-			surfaceCellNodes[Direction.Left],
+		surfaceCellNodes[Orientation.Up].Neighbors[Orientation.Left] = (
+			surfaceCellNodes[Orientation.Left],
 			0
 		);
 
 		// Down
-		surfaceCellNodes[Direction.Down].Neighbors[Direction.Forward] = (
-			surfaceCellNodes[Direction.Forward],
+		surfaceCellNodes[Orientation.Down].Neighbors[Orientation.Forward] = (
+			surfaceCellNodes[Orientation.Forward],
 			2
 		);
-		surfaceCellNodes[Direction.Down].Neighbors[Direction.Right] = (
-			surfaceCellNodes[Direction.Left],
+		surfaceCellNodes[Orientation.Down].Neighbors[Orientation.Right] = (
+			surfaceCellNodes[Orientation.Left],
 			0
 		);
-		surfaceCellNodes[Direction.Down].Neighbors[Direction.Backward] = (
-			surfaceCellNodes[Direction.Backward],
+		surfaceCellNodes[Orientation.Down].Neighbors[Orientation.Backward] = (
+			surfaceCellNodes[Orientation.Backward],
 			2
 		);
-		surfaceCellNodes[Direction.Down].Neighbors[Direction.Left] = (
-			surfaceCellNodes[Direction.Right],
+		surfaceCellNodes[Orientation.Down].Neighbors[Orientation.Left] = (
+			surfaceCellNodes[Orientation.Right],
 			0
 		);
 
 		// Forward
-		surfaceCellNodes[Direction.Forward].Neighbors[Direction.Up] = (
-			surfaceCellNodes[Direction.Up],
+		surfaceCellNodes[Orientation.Forward].Neighbors[Orientation.Up] = (
+			surfaceCellNodes[Orientation.Up],
 			0
 		);
-		surfaceCellNodes[Direction.Forward].Neighbors[Direction.Right] = (
-			surfaceCellNodes[Direction.Right],
+		surfaceCellNodes[Orientation.Forward].Neighbors[Orientation.Right] = (
+			surfaceCellNodes[Orientation.Right],
 			1
 		);
-		surfaceCellNodes[Direction.Forward].Neighbors[Direction.Down] = (
-			surfaceCellNodes[Direction.Down],
+		surfaceCellNodes[Orientation.Forward].Neighbors[Orientation.Down] = (
+			surfaceCellNodes[Orientation.Down],
 			2
 		);
-		surfaceCellNodes[Direction.Forward].Neighbors[Direction.Left] = (
-			surfaceCellNodes[Direction.Left],
+		surfaceCellNodes[Orientation.Forward].Neighbors[Orientation.Left] = (
+			surfaceCellNodes[Orientation.Left],
 			3
 		);
 
 		// Backward
-		surfaceCellNodes[Direction.Backward].Neighbors[Direction.Up] = (
-			surfaceCellNodes[Direction.Up],
+		surfaceCellNodes[Orientation.Backward].Neighbors[Orientation.Up] = (
+			surfaceCellNodes[Orientation.Up],
 			2
 		);
-		surfaceCellNodes[Direction.Backward].Neighbors[Direction.Right] = (
-			surfaceCellNodes[Direction.Left],
+		surfaceCellNodes[Orientation.Backward].Neighbors[Orientation.Right] = (
+			surfaceCellNodes[Orientation.Left],
 			1
 		);
-		surfaceCellNodes[Direction.Backward].Neighbors[Direction.Down] = (
-			surfaceCellNodes[Direction.Down],
+		surfaceCellNodes[Orientation.Backward].Neighbors[Orientation.Down] = (
+			surfaceCellNodes[Orientation.Down],
 			0
 		);
-		surfaceCellNodes[Direction.Backward].Neighbors[Direction.Left] = (
-			surfaceCellNodes[Direction.Right],
+		surfaceCellNodes[Orientation.Backward].Neighbors[Orientation.Left] = (
+			surfaceCellNodes[Orientation.Right],
 			3
 		);
 
 		// Right
-		surfaceCellNodes[Direction.Right].Neighbors[Direction.Up] = (
-			surfaceCellNodes[Direction.Up],
+		surfaceCellNodes[Orientation.Right].Neighbors[Orientation.Up] = (
+			surfaceCellNodes[Orientation.Up],
 			1
 		);
-		surfaceCellNodes[Direction.Right].Neighbors[Direction.Forward] = (
-			surfaceCellNodes[Direction.Forward],
+		surfaceCellNodes[Orientation.Right].Neighbors[Orientation.Forward] = (
+			surfaceCellNodes[Orientation.Forward],
 			3
 		);
-		surfaceCellNodes[Direction.Right].Neighbors[Direction.Down] = (
-			surfaceCellNodes[Direction.Down],
+		surfaceCellNodes[Orientation.Right].Neighbors[Orientation.Down] = (
+			surfaceCellNodes[Orientation.Down],
 			1
 		);
-		surfaceCellNodes[Direction.Right].Neighbors[Direction.Backward] = (
-			surfaceCellNodes[Direction.Backward],
+		surfaceCellNodes[Orientation.Right].Neighbors[Orientation.Backward] = (
+			surfaceCellNodes[Orientation.Backward],
 			1
 		);
 
 		// Left
-		surfaceCellNodes[Direction.Left].Neighbors[Direction.Up] = (
-			surfaceCellNodes[Direction.Up],
+		surfaceCellNodes[Orientation.Left].Neighbors[Orientation.Up] = (
+			surfaceCellNodes[Orientation.Up],
 			3
 		);
-		surfaceCellNodes[Direction.Left].Neighbors[Direction.Forward] = (
-			surfaceCellNodes[Direction.Forward],
+		surfaceCellNodes[Orientation.Left].Neighbors[Orientation.Forward] = (
+			surfaceCellNodes[Orientation.Forward],
 			1
 		);
-		surfaceCellNodes[Direction.Left].Neighbors[Direction.Down] = (
-			surfaceCellNodes[Direction.Down],
+		surfaceCellNodes[Orientation.Left].Neighbors[Orientation.Down] = (
+			surfaceCellNodes[Orientation.Down],
 			3
 		);
-		surfaceCellNodes[Direction.Left].Neighbors[Direction.Backward] = (
-			surfaceCellNodes[Direction.Backward],
+		surfaceCellNodes[Orientation.Left].Neighbors[Orientation.Backward] = (
+			surfaceCellNodes[Orientation.Backward],
 			3
 		);
 	}
