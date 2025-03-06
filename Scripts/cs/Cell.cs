@@ -1,11 +1,18 @@
 using Godot;
+using System;
 namespace _Climate.Scripts;
 
 public class Cell
 {
-    public double Temperature { get; set; }
+	private double _temperature;
+	public double Temperature {
+		get => _temperature;
+		set {
+			_temperature = Math.Clamp(value, -120, 120);
+		}
+	}
 
-    public Vector3 Position { get; set; }
+	public Vector3 Position { get; set; }
 
-    public string Name { get; set; }
+	public string Name { get; set; }
 }

@@ -3,7 +3,7 @@ using Godot;
 using static Godot.GD;
 using _Climate.Scripts;
 
-public partial class Node3d : Node
+public partial class CellsBaseNode : Node
 {
 	[Export] PackedScene cellScene;
 	MeshInstance3D cellPrefab;
@@ -33,6 +33,7 @@ public partial class Node3d : Node
 	{
 		temperCalc = new TemperatureCalculator(Length, Alpha, cells);
 
+		cells = new SpaceCells(Length, "TestCell");
 		cellsMesh = new MeshInstance3d[Length, Length, Length];
 		cellPrefab = cellScene.Instantiate<MeshInstance3D>();
 
@@ -86,7 +87,6 @@ public partial class Node3d : Node
 			}
 		}
 
-
 		switch (_mapType)
 		{
 			case MapType.temperCalcDistribution:
@@ -94,12 +94,15 @@ public partial class Node3d : Node
 				{
 					for (int y = 0; y < temperCalc.Length; y++)
 					{
-						cellsMesh[0, x, y].Temperature = (float)temperCalc.Cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, 0, y].Temperature = (float)temperCalc.Cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, y, 0].Temperature = (float)temperCalc.Cells.Cell(x, y, 0).Temperature;
-						cellsMesh[Length - 1, x, y].Temperature = (float)temperCalc.Cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, Length - 1, y].Temperature = (float)temperCalc.Cells.Cell(x, y, 0).Temperature;
-						cellsMesh[x, y, Length - 1].Temperature = (float)temperCalc.Cells.Cell(x, y, 0).Temperature;
+						// cellsMesh[0, x, y].Temperature = -60;
+						// GD.Print(cellsMesh[0, x, y].Temperature);
+						// GD.Print(cells.Cell(x, y, 0));
+						cellsMesh[0, x, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
+						cellsMesh[x, 0, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
+						cellsMesh[x, y, 0].Temperature = (float)cells.Cell(x, y, 0).Temperature;
+						cellsMesh[Length - 1, x, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
+						cellsMesh[x, Length - 1, y].Temperature = (float)cells.Cell(x, y, 0).Temperature;
+						cellsMesh[x, y, Length - 1].Temperature = (float)cells.Cell(x, y, 0).Temperature;
 					}
 				}
 
@@ -109,7 +112,7 @@ public partial class Node3d : Node
 				//     {
 				//         for (int y = 0; y < temperCalc.Length; y++)
 				//         {
-				//             cellsMesh[x, 0, y].Temperature = (float)temperCalc.CellsDerivative[x, y];
+				//             cellsMesh[x, 0, y].Temperature = (float)cellsDerivative[x, y];
 				//         }
 				//     }
 
@@ -119,7 +122,7 @@ public partial class Node3d : Node
 				//     {
 				//         for (int y = 0; y < temperCalc.Length; y++)
 				//         {
-				//             cells[x, 0, y].temperCalc = (float)temperCalc.CellsAnomaly[x, y];
+				//             cells[x, 0, y].temperCalc = (float)cellsAnomaly[x, y];
 				//         }
 				//     }
 

@@ -52,7 +52,7 @@ public class TemperatureCalculator(int length, double alpha, SpaceCells cells)
 		// https://zhuanlan.zhihu.com/p/8616433050
 		SpaceCells rk4(SpaceCells cells, double dt, int width, int height, double dx2, double alpha)
 		{
-			var T = cells.Clone();
+			var T = cells;
 
 			// 时间积分：使用 Runge-Kutta 方法
 			// 小朋友想一想你能不能用你妈隐式方法因为你他妈的算太慢了

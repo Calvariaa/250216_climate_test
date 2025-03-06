@@ -24,7 +24,7 @@ public class SpaceCells
 				cells[i, j] = new Cell
 				{
 					Temperature = 0,
-					Position = new Vector3(i, j, 0),
+					Position = new Vector3(0, 0, 0),
 					Name = $"Cell_{Name}_{i}_{j}"
 				};
 			}
