@@ -1,12 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://citegdu3dcor5"]
 
-[ext_resource type="Script" uid="uid://dvqcx68meyco6" path="res://Scripts/MeshInstance3d.cs" id="1_nkj5p"]
+[ext_resource type="Script" uid="uid://dvqcx68meyco6" path="res://Scripts/CellsBaseMeshInstance.cs" id="1_nkj5p"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nkj5p"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nkj5p"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_stsxw"]
-material = SubResource("ShaderMaterial_nkj5p")
+[sub_resource type="PlaneMesh" id="PlaneMesh_stsxw"]
+material = SubResource("StandardMaterial3D_nkj5p")
+size = Vector2(1, 1)
 
-[node name="MeshInstance3D" type="MeshInstance3D"]
-mesh = SubResource("BoxMesh_stsxw")
+[node name="CellsBaseMeshInstance" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_stsxw")
 script = ExtResource("1_nkj5p")
