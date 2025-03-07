@@ -9,7 +9,7 @@ public partial class CellsBaseNode : Node
 	MeshInstance3D cellPrefab;
 
 	[Export] float CellSize = 0.1f;
-	[Export] int Length = 100;
+	[Export] int Length = 25;
 	[Export] double Alpha = 1e-4;
 	CellsBaseMeshInstance[,,] cellsMesh;
 

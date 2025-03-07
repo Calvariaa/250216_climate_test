@@ -23,7 +23,7 @@ var mouse_move_flag: bool = false
 var mouse_rotate_flag: bool = false
 var mouse_move_sensitivity: float = 0.001
 var mouse_rotation_sensitivity: float = 0.02
-var mouse_zoom_sensitivity: float = 0.5
+var mouse_zoom_sensitivity: float = 0.1
 func _update_camera(event: InputEvent) -> void:
 	# 平移：按住shift和鼠标中键
 	if not mouse_rotate_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) and Input.is_key_pressed(KEY_SHIFT):

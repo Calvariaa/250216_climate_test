@@ -5,8 +5,8 @@ using _Climate.Scripts;
 
 public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 {
-	[Export] float CellSize = 0.1f;
-	[Export] int Length = 1;
+	[Export] float CellSize = 1;
+	[Export] int Length = 2;
 	[Export] double Alpha = 1e-4;
 
 	private TemperatureCalculator temperCalc;
@@ -43,55 +43,55 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 					{
 						case AreaOrientation.Up:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f) * CellSize,
-								((Length + 1) / 2.0f) * CellSize,
-								(j - (Length - 1) / 2.0f) * CellSize
-							);
+								(i - (Length - 1) / 2.0f),
+								((Length + 1.0f) / 2.0f),
+								(j - (Length - 1) / 2.0f)
+							) * CellSize;
 							rotation_axis = new Vector3(0, 0, 0);
 							rotation_angle = 0;
 							break;
 						case AreaOrientation.Down:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f) * CellSize,
-								(-(Length + 1) / 2.0f) * CellSize,
-								(j - (Length - 1) / 2.0f) * CellSize
-							);
+								(i - (Length - 1) / 2.0f),
+								(-(Length + 1.0f) / 2.0f),
+								(j - (Length - 1) / 2.0f)
+							) * CellSize;
 							rotation_axis = new Vector3(1, 0, 0);
 							rotation_angle = (float)Math.PI;
 							break;
 						case AreaOrientation.Left:
 							position = new Vector3(
-								(-(Length + 1) / 2.0f) * CellSize,
-								(j - (Length - 1) / 2.0f) * CellSize,
-								(i - (Length - 1) / 2.0f) * CellSize
-							);
+								(-(Length + 1.0f) / 2.0f),
+								(j - (Length - 1) / 2.0f),
+								(i - (Length - 1) / 2.0f)
+							) * CellSize;
 							rotation_axis = new Vector3(0, 0, 1);
 							rotation_angle = (float)(Math.PI / 2.0);
 							break;
 						case AreaOrientation.Right:
 							position = new Vector3(
-								((Length + 1) / 2.0f) * CellSize,
-								(j - (Length - 1) / 2.0f) * CellSize,
-								(i - (Length - 1) / 2.0f) * CellSize
-							);
+								((Length + 1.0f) / 2.0f),
+								(j - (Length - 1) / 2.0f),
+								(i - (Length - 1) / 2.0f)
+							) * CellSize;
 							rotation_axis = new Vector3(0, 0, 1);
 							rotation_angle = -(float)(Math.PI / 2.0);
 							break;
 						case AreaOrientation.Forward:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f) * CellSize,
-								(j - (Length - 1) / 2.0f) * CellSize,
-								((Length + 1) / 2.0f) * CellSize
-							);
+								(i - (Length - 1) / 2.0f),
+								(j - (Length - 1) / 2.0f),
+								((Length + 1.0f) / 2.0f)
+							) * CellSize;
 							rotation_axis = new Vector3(1, 0, 0);
 							rotation_angle = (float)(Math.PI / 2.0);
 							break;
 						case AreaOrientation.Backward:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f) * CellSize,
-								(j - (Length - 1) / 2.0f) * CellSize,
-								(-(Length + 1) / 2.0f) * CellSize
-							);
+								(i - (Length - 1) / 2.0f),
+								(j - (Length - 1) / 2.0f),
+								(-(Length + 1.0f) / 2.0f)
+							) * CellSize;
 							rotation_axis = new Vector3(1, 0, 0);
 							rotation_angle = -(float)(Math.PI / 2.0);
 							break;
@@ -101,9 +101,8 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 							rotation_angle = 0;
 							break;
 					}
-					var multiMeshTransform = 
-						new Transform3D(Basis.FromScale(new Vector3(CellSize, CellSize, CellSize)), position) * 
-						new Transform3D(new Basis(rotation_axis, rotation_angle), position);
+					var multiMeshTransform =
+						new Transform3D(Basis.FromScale(new Vector3(CellSize, CellSize, CellSize)) * new Basis(rotation_axis, rotation_angle), position);
 
 					Multimesh.SetInstanceTransform((int)orintation * Length * Length + i * Length + j, multiMeshTransform);
 
