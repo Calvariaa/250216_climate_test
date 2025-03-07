@@ -9,6 +9,7 @@ public class SurfaceCells
 	public SurfaceCells(int length)
 	{
 		Length = length;
+		Count = length * length;
 		cells = new Cell[length, length];
 		InitializeCells();
 	}
@@ -29,6 +30,10 @@ public class SurfaceCells
 		return cells[i, j];
 	}
 
+	public int GetLength()
+	{ 
+		return Length;
+	}
 
 	public Cell Cell(int i, int j, int rotation)
 	{
