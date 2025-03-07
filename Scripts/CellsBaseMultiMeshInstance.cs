@@ -5,16 +5,18 @@ using _Climate.Scripts;
 
 public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 {
-	[Export] float CellSize = 1;
-	[Export] int Length = 2;
+	[Export] float CellSize = 0.1f;
+	[Export] int Length = 100;
 	[Export] double Alpha = 1e-4;
 
 	private TemperatureCalculator temperCalc;
 	private SurfaceAreaCells cells;
 	public override void _Ready()
 	{
+
 		// Create the multimesh.
 		Multimesh = new MultiMesh();
+
 		Multimesh.UseColors = true;
 		// Set the format first.
 		Multimesh.TransformFormat = MultiMesh.TransformFormatEnum.Transform3D;
@@ -25,9 +27,9 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 
 		Multimesh.Mesh = new PlaneMesh();
 
-		// cells = new SurfaceAreaCells(Length);
+		cells = new SurfaceAreaCells(Length);
 
-		// temperCalc = new TemperatureCalculator(Length, Alpha, cells);
+		temperCalc = new TemperatureCalculator(Length, Alpha, cells);
 
 		// Set the transform of the instances.
 		foreach (var orintation in Enum.GetValues(typeof(AreaOrientation)))
@@ -106,7 +108,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 
 					Multimesh.SetInstanceTransform((int)orintation * Length * Length + i * Length + j, multiMeshTransform);
 
-					// Multimesh.SetInstanceColor((int)orintation * Length * Length + i * Length + j, Colors.Pink);
+					Multimesh.SetInstanceColor((int)orintation * Length * Length + i * Length + j, Colors.Pink);
 				}
 			}
 		}
@@ -115,7 +117,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 	public override void _Process(double delta)
 	{
 		return;
-		// temperCalc.Calculate(delta);
+		temperCalc.Calculate(delta);
 
 		// 随机生成温度
 		foreach (AreaOrientation AreaOrientation in Enum.GetValues(typeof(AreaOrientation)))
