@@ -23,8 +23,9 @@ var mouse_move_flag: bool = false
 var mouse_rotate_flag: bool = false
 var mouse_move_sensitivity: float = 0.001
 var mouse_rotation_sensitivity: float = 0.02
-var mouse_zoom_sensitivity: float = 0.5
+var mouse_zoom_sensitivity: float = 0.1
 func _update_camera(event: InputEvent) -> void:
+	var distance_to_origin = camera.global_transform.origin.length()
 	# 平移：按住shift和鼠标中键
 	if not mouse_rotate_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) and Input.is_key_pressed(KEY_SHIFT):
 		if not mouse_move_flag:
@@ -39,7 +40,7 @@ func _update_camera(event: InputEvent) -> void:
 			var displacement = event.relative
 
 			# Apply camera translation
-			camera.translate(Vector3(-displacement.x * mouse_move_sensitivity, displacement.y * mouse_move_sensitivity, 0))
+			camera.translate(Vector3(-displacement.x * mouse_move_sensitivity * distance_to_origin, displacement.y * mouse_move_sensitivity * distance_to_origin, 0))
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			Input.warp_mouse(mouse_pos)
@@ -71,6 +72,6 @@ func _update_camera(event: InputEvent) -> void:
 
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			camera.translate(Vector3(0, 0, -mouse_zoom_sensitivity))
+			camera.translate(Vector3(0, 0, -mouse_zoom_sensitivity * distance_to_origin))
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			camera.translate(Vector3(0, 0, mouse_zoom_sensitivity))
+			camera.translate(Vector3(0, 0, mouse_zoom_sensitivity * distance_to_origin))

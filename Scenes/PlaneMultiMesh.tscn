@@ -5,14 +5,13 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4oip7"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_koba8"]
+[sub_resource type="PointMesh" id="PointMesh_koba8"]
 material = SubResource("StandardMaterial3D_4oip7")
-size = Vector2(1, 1)
 
 [sub_resource type="MultiMesh" id="MultiMesh_vmhkr"]
 transform_format = 1
 use_colors = true
-mesh = SubResource("PlaneMesh_koba8")
+mesh = SubResource("PointMesh_koba8")
 
 [node name="PlaneMultiMesh" type="Node3D"]
 
@@ -20,7 +19,7 @@ mesh = SubResource("PlaneMesh_koba8")
 script = ExtResource("2_4oip7")
 
 [node name="Camera3D" type="Camera3D" parent="CameraNode3D"]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 107.74, 196.734)
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 52.8811, 47.6477)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="CameraNode3D/Camera3D"]
 transform = Transform3D(-0.0579754, -0.993696, 0.0959503, 0.996778, -0.0522818, 0.0608273, -0.0554275, 0.0991677, 0.993526, 0.801308, -0.473215, 3.46323)

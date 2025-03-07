@@ -157,24 +157,6 @@ public partial class CellsBaseNode : Node
 				{
 					cellsMesh[i, j, (int)orintation].Temperature =
 						(float)cells.surfaceCellNodes[orintation].Surface.Cell(i, j, 0).Temperature;
-					// // Left
-					// cellsMesh[x, y, (int)AreaOrientation.Left].Temperature =
-					// 	(float)cells.surfaceCellNodes[AreaOrientation.Left].Surface.Cell(x, y, 0).Temperature;
-					// // Down
-					// cellsMesh[x, y, (int)AreaOrientation.Down].Temperature =
-					// 	(float)cells.surfaceCellNodes[AreaOrientation.Down].Surface.Cell(x, y, 0).Temperature;
-					// // Backward
-					// cellsMesh[x, y, (int)AreaOrientation.Backward].Temperature =
-					// 	(float)cells.surfaceCellNodes[AreaOrientation.Backward].Surface.Cell(x, y, 0).Temperature;
-					// // Right
-					// cellsMesh[x, y, (int)AreaOrientation.Right].Temperature =
-					// 	(float)cells.surfaceCellNodes[AreaOrientation.Right].Surface.Cell(x, y, 0).Temperature;
-					// // Up
-					// cellsMesh[x, y, (int)AreaOrientation.Up].Temperature =
-					// 	(float)cells.surfaceCellNodes[AreaOrientation.Up].Surface.Cell(x, y, 0).Temperature;
-					// // Forward
-					// cellsMesh[x, y, (int)AreaOrientation.Forward].Temperature =
-					// 	(float)cells.surfaceCellNodes[AreaOrientation.Forward].Surface.Cell(x, y, 0).Temperature;
 				}
 			}
 		}
