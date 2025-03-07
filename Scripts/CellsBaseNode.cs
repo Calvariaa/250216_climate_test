@@ -11,7 +11,7 @@ public partial class CellsBaseNode : Node
 	[Export] float CellSize = 0.1f;
 	[Export] int Length = 50;
 	[Export] double Alpha = 1e-4;
-	MeshInstance3d[,,] cellsMesh;
+	CellsBaseMeshInstance[,,] cellsMesh;
 
 	private TemperatureCalculator temperCalc;
 	private SurfaceAreaCells cells;
@@ -33,7 +33,7 @@ public partial class CellsBaseNode : Node
 	{
 
 		cells = new SurfaceAreaCells(Length);
-		cellsMesh = new MeshInstance3d[Length, Length, Length];
+		cellsMesh = new CellsBaseMeshInstance[Length, Length, Length];
 		cellPrefab = cellScene.Instantiate<MeshInstance3D>();
 
 		temperCalc = new TemperatureCalculator(Length, Alpha, cells);
@@ -55,7 +55,8 @@ public partial class CellsBaseNode : Node
 							(j - Length / 2) * CellSize,
 							(k - Length / 2) * CellSize
 						);
-						cellsMesh[i, j, k] = cell as MeshInstance3d;
+						
+						cellsMesh[i, j, k] = cell as CellsBaseMeshInstance;
 					}
 				}
 			}

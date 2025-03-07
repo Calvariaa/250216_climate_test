@@ -26,7 +26,7 @@ var mouse_rotation_sensitivity: float = 0.02
 var mouse_zoom_sensitivity: float = 0.5
 func _update_camera(event: InputEvent) -> void:
 	# 平移：按住shift和鼠标中键
-	if not mouse_rotate_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) and Input.is_key_pressed(KEY_SHIFT):
+	if not mouse_rotate_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_key_pressed(KEY_SHIFT):
 		if not mouse_move_flag:
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			mouse_pos = get_viewport().get_mouse_position()
@@ -40,14 +40,14 @@ func _update_camera(event: InputEvent) -> void:
 
 			# Apply camera translation
 			camera.translate(Vector3(-displacement.x * mouse_move_sensitivity, displacement.y * mouse_move_sensitivity, 0))
-		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			Input.warp_mouse(mouse_pos)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			mouse_move_flag = false
 
 	# 旋转：按住鼠标中键
-	if not mouse_move_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+	if not mouse_move_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		if not mouse_rotate_flag:
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			mouse_pos = get_viewport().get_mouse_position()
@@ -63,7 +63,7 @@ func _update_camera(event: InputEvent) -> void:
 			# rotate(Vector3(0, 1, 0), deg_to_rad(-displacement.x * mouse_rotation_sensitivity))
 			rotate_x(deg_to_rad(-displacement.y * mouse_rotation_sensitivity));
 			rotate_y(deg_to_rad(-displacement.x * mouse_rotation_sensitivity));
-		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			Input.warp_mouse(mouse_pos)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
