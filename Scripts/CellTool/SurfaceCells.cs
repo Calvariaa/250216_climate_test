@@ -24,6 +24,12 @@ public class SurfaceCells
 		}
 	}
 
+	public Cell Cell(int i, int j)
+	{
+		return cells[i, j];
+	}
+
+
 	public Cell Cell(int i, int j, int rotation)
 	{
 		switch (rotation)
@@ -40,6 +46,7 @@ public class SurfaceCells
 				return null;
 		}
 	}
+
 
 	public SurfaceCells Clone()
 	{

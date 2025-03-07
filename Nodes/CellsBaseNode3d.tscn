@@ -9,6 +9,5 @@ material = SubResource("StandardMaterial3D_nkj5p")
 size = Vector2(1, 1)
 
 [node name="CellsBaseMeshInstance" type="MeshInstance3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.264668, -2.38419e-07, 0.608911)
 mesh = SubResource("PlaneMesh_stsxw")
 script = ExtResource("1_nkj5p")

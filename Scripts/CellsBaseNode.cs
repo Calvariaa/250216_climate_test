@@ -9,7 +9,7 @@ public partial class CellsBaseNode : Node
 	MeshInstance3D cellPrefab;
 
 	[Export] float CellSize = 0.1f;
-	[Export] int Length = 50;
+	[Export] int Length = 100;
 	[Export] double Alpha = 1e-4;
 	CellsBaseMeshInstance[,,] cellsMesh;
 
@@ -33,34 +33,101 @@ public partial class CellsBaseNode : Node
 	{
 
 		cells = new SurfaceAreaCells(Length);
-		cellsMesh = new CellsBaseMeshInstance[Length, Length, Length];
+		cellsMesh = new CellsBaseMeshInstance[Length, Length, Enum.GetValues(typeof(AreaOrientation)).Length];
 		cellPrefab = cellScene.Instantiate<MeshInstance3D>();
 
 		temperCalc = new TemperatureCalculator(Length, Alpha, cells);
 
 		// Create cells
-		for (int i = 0; i < Length; i++)
+
+		foreach (var orintation in Enum.GetValues(typeof(AreaOrientation)))
 		{
-			for (int j = 0; j < Length; j++)  // Width
+			for (int i = 0; i < Length; i++)
 			{
-				for (int k = 0; k < Length; k++)  // Height
+				for (int j = 0; j < Length; j++)
 				{
-					if ((i == 0 || i == Length - 1) || (j == 0 || j == Length - 1) || (k == 0 || k == Length - 1))
+					MeshInstance3D cell = cellPrefab.Duplicate() as MeshInstance3D;
+					AddChild(cell);
+					cell.Scale = new Vector3(CellSize, CellSize, CellSize);
+
+					switch (orintation)
 					{
-						MeshInstance3D cell = cellPrefab.Duplicate() as MeshInstance3D;
-						AddChild(cell);
-						cell.Scale = new Vector3(CellSize, CellSize, CellSize);
-						cell.Position = new Vector3(
-							(i - Length / 2) * CellSize,
-							(j - Length / 2) * CellSize,
-							(k - Length / 2) * CellSize
-						);
-						
-						cellsMesh[i, j, k] = cell as CellsBaseMeshInstance;
+						case AreaOrientation.Up:
+							cell.Position = new Vector3(
+								(i - (Length - 1) / 2.0f) * CellSize,
+								(Length / 2.0f) * CellSize,
+								(j - (Length - 1) / 2.0f) * CellSize
+							);
+							cell.RotationDegrees = new Vector3(0, 0, 0);
+							break;
+						case AreaOrientation.Down:
+							cell.Position = new Vector3(
+								(i - (Length - 1) / 2.0f) * CellSize,
+								(-Length / 2.0f) * CellSize,
+								(j - (Length - 1) / 2.0f) * CellSize
+							);
+							cell.RotationDegrees = new Vector3(180, 0, 0);
+							break;
+						case AreaOrientation.Left:
+							cell.Position = new Vector3(
+								(-Length / 2.0f) * CellSize,
+								(j - (Length - 1) / 2.0f) * CellSize,
+								(i - (Length - 1) / 2.0f) * CellSize
+							);
+							cell.RotationDegrees = new Vector3(0, 0, 90);
+							break;
+						case AreaOrientation.Right:
+							cell.Position = new Vector3(
+								(Length / 2.0f) * CellSize,
+								(j - (Length - 1) / 2.0f) * CellSize,
+								(i - (Length - 1) / 2.0f) * CellSize
+							);
+							cell.RotationDegrees = new Vector3(0, 0, -90);
+							break;
+						case AreaOrientation.Forward:
+							cell.Position = new Vector3(
+								(i - (Length - 1) / 2.0f) * CellSize,
+								(j - (Length - 1) / 2.0f) * CellSize,
+								(Length / 2.0f) * CellSize
+							);
+							cell.RotationDegrees = new Vector3(90, 0, 0);
+							break;
+						case AreaOrientation.Backward:
+							cell.Position = new Vector3(
+								(i - (Length - 1) / 2.0f) * CellSize,
+								(j - (Length - 1) / 2.0f) * CellSize,
+								(-Length / 2.0f) * CellSize
+							);
+							cell.RotationDegrees = new Vector3(-90, 0, 0);
+							break;
 					}
+
+					cellsMesh[i, j, (int)orintation] = cell as CellsBaseMeshInstance;
 				}
 			}
 		}
+		// for (int i = 0; i < Length; i++)
+		// {
+		// 	for (int j = 0; j < Length; j++)  // Width
+		// 	{
+		// 		for (int k = 0; k < Length; k++)  // Height
+		// 		{
+		// 			if ((i == 0 || i == Length - 1) || (j == 0 || j == Length - 1) || (k == 0 || k == Length - 1))
+		// 			{
+		// 				MeshInstance3D cell = cellPrefab.Duplicate() as MeshInstance3D;
+		// 				AddChild(cell);
+		// 				cell.Scale = new Vector3(CellSize, CellSize, CellSize);
+		// 				cell.Position = new Vector3(
+		// 					(i - Length / 2) * CellSize,
+		// 					(j - Length / 2) * CellSize,
+		// 					(k - Length / 2) * CellSize
+		// 				);
+
+		// 				cellsMesh[i, j, k] = cell as CellsBaseMeshInstance;
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	public override void _Process(double delta)
@@ -68,7 +135,7 @@ public partial class CellsBaseNode : Node
 		temperCalc.Calculate(delta);
 
 		// 随机生成温度
-		foreach (SurfaceAreaCells.Orientation orientation in Enum.GetValues(typeof(SurfaceAreaCells.Orientation)))
+		foreach (AreaOrientation AreaOrientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
 			if (Randf() < 0.1)
 			{
@@ -85,7 +152,7 @@ public partial class CellsBaseNode : Node
 					{
 						if (Mathf.Pow(x - width, 2) + Mathf.Pow(y - height, 2) < radius)
 						{
-							cells.surfaceCellNodes[orientation].Surface.Cell(x, y, 0).Temperature = temperature;
+							cells.surfaceCellNodes[AreaOrientation].Surface.Cell(x, y, 0).Temperature = temperature;
 						}
 					}
 				}
@@ -95,12 +162,12 @@ public partial class CellsBaseNode : Node
 		// Test Method
 		// for (int i = 0; i < temperCalc.Length; i++)
 		// {
-		// 	cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(0, i, 0).Temperature = -120;
+		// 	cells.surfaceCellNodes[AreaOrientation.Up].Surface.Cell(0, i, 0).Temperature = -120;
 		// }
 
 		// for (int i = 0; i < temperCalc.Length; i++)
 		// {
-		// 	cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(i, 0, 0).Temperature = 120;
+		// 	cells.surfaceCellNodes[AreaOrientation.Up].Surface.Cell(i, 0, 0).Temperature = 120;
 		// }
 
 
@@ -109,23 +176,23 @@ public partial class CellsBaseNode : Node
 			for (int y = 0; y < temperCalc.Length; y++)
 			{
 				// Left
-				cellsMesh[0, x, y].Temperature =
-					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Left].Surface.Cell(x, y, 0).Temperature;
+				cellsMesh[x, y, (int)AreaOrientation.Left].Temperature =
+					(float)cells.surfaceCellNodes[AreaOrientation.Left].Surface.Cell(x, y, 0).Temperature;
 				// Down
-				cellsMesh[x, 0, y].Temperature =
-					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Down].Surface.Cell(x, y, 0).Temperature;
+				cellsMesh[x, y, (int)AreaOrientation.Down].Temperature =
+					(float)cells.surfaceCellNodes[AreaOrientation.Down].Surface.Cell(x, y, 0).Temperature;
 				// Backward
-				cellsMesh[x, y, 0].Temperature =
-					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Backward].Surface.Cell(x, y, 0).Temperature;
+				cellsMesh[x, y, (int)AreaOrientation.Backward].Temperature =
+					(float)cells.surfaceCellNodes[AreaOrientation.Backward].Surface.Cell(x, y, 0).Temperature;
 				// Right
-				cellsMesh[Length - 1, x, y].Temperature =
-					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Right].Surface.Cell(x, y, 0).Temperature;
+				cellsMesh[x, y, (int)AreaOrientation.Right].Temperature =
+					(float)cells.surfaceCellNodes[AreaOrientation.Right].Surface.Cell(x, y, 0).Temperature;
 				// Up
-				cellsMesh[x, Length - 1, y].Temperature =
-					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Up].Surface.Cell(x, y, 0).Temperature;
+				cellsMesh[x, y, (int)AreaOrientation.Up].Temperature =
+					(float)cells.surfaceCellNodes[AreaOrientation.Up].Surface.Cell(x, y, 0).Temperature;
 				// Forward
-				cellsMesh[x, y, Length - 1].Temperature =
-					(float)cells.surfaceCellNodes[SurfaceAreaCells.Orientation.Forward].Surface.Cell(x, y, 0).Temperature;
+				cellsMesh[x, y, (int)AreaOrientation.Forward].Temperature =
+					(float)cells.surfaceCellNodes[AreaOrientation.Forward].Surface.Cell(x, y, 0).Temperature;
 			}
 		}
 
