@@ -106,28 +106,6 @@ public partial class CellsBaseNode : Node
 				}
 			}
 		}
-		// for (int i = 0; i < Length; i++)
-		// {
-		// 	for (int j = 0; j < Length; j++)  // Width
-		// 	{
-		// 		for (int k = 0; k < Length; k++)  // Height
-		// 		{
-		// 			if ((i == 0 || i == Length - 1) || (j == 0 || j == Length - 1) || (k == 0 || k == Length - 1))
-		// 			{
-		// 				MeshInstance3D cell = cellPrefab.Duplicate() as MeshInstance3D;
-		// 				AddChild(cell);
-		// 				cell.Scale = new Vector3(CellSize, CellSize, CellSize);
-		// 				cell.Position = new Vector3(
-		// 					(i - Length / 2) * CellSize,
-		// 					(j - Length / 2) * CellSize,
-		// 					(k - Length / 2) * CellSize
-		// 				);
-
-		// 				cellsMesh[i, j, k] = cell as CellsBaseMeshInstance;
-		// 			}
-		// 		}
-		// 	}
-		// }
 	}
 
 	public override void _Process(double delta)
@@ -171,28 +149,33 @@ public partial class CellsBaseNode : Node
 		// }
 
 
-		for (int x = 0; x < temperCalc.Length; x++)
+		foreach (AreaOrientation orintation in Enum.GetValues(typeof(AreaOrientation)))
 		{
-			for (int y = 0; y < temperCalc.Length; y++)
+			for (int i = 0; i < temperCalc.Length; i++)
 			{
-				// Left
-				cellsMesh[x, y, (int)AreaOrientation.Left].Temperature =
-					(float)cells.surfaceCellNodes[AreaOrientation.Left].Surface.Cell(x, y, 0).Temperature;
-				// Down
-				cellsMesh[x, y, (int)AreaOrientation.Down].Temperature =
-					(float)cells.surfaceCellNodes[AreaOrientation.Down].Surface.Cell(x, y, 0).Temperature;
-				// Backward
-				cellsMesh[x, y, (int)AreaOrientation.Backward].Temperature =
-					(float)cells.surfaceCellNodes[AreaOrientation.Backward].Surface.Cell(x, y, 0).Temperature;
-				// Right
-				cellsMesh[x, y, (int)AreaOrientation.Right].Temperature =
-					(float)cells.surfaceCellNodes[AreaOrientation.Right].Surface.Cell(x, y, 0).Temperature;
-				// Up
-				cellsMesh[x, y, (int)AreaOrientation.Up].Temperature =
-					(float)cells.surfaceCellNodes[AreaOrientation.Up].Surface.Cell(x, y, 0).Temperature;
-				// Forward
-				cellsMesh[x, y, (int)AreaOrientation.Forward].Temperature =
-					(float)cells.surfaceCellNodes[AreaOrientation.Forward].Surface.Cell(x, y, 0).Temperature;
+				for (int j = 0; j < temperCalc.Length; j++)
+				{
+					cellsMesh[i, j, (int)orintation].Temperature =
+						(float)cells.surfaceCellNodes[orintation].Surface.Cell(i, j, 0).Temperature;
+					// // Left
+					// cellsMesh[x, y, (int)AreaOrientation.Left].Temperature =
+					// 	(float)cells.surfaceCellNodes[AreaOrientation.Left].Surface.Cell(x, y, 0).Temperature;
+					// // Down
+					// cellsMesh[x, y, (int)AreaOrientation.Down].Temperature =
+					// 	(float)cells.surfaceCellNodes[AreaOrientation.Down].Surface.Cell(x, y, 0).Temperature;
+					// // Backward
+					// cellsMesh[x, y, (int)AreaOrientation.Backward].Temperature =
+					// 	(float)cells.surfaceCellNodes[AreaOrientation.Backward].Surface.Cell(x, y, 0).Temperature;
+					// // Right
+					// cellsMesh[x, y, (int)AreaOrientation.Right].Temperature =
+					// 	(float)cells.surfaceCellNodes[AreaOrientation.Right].Surface.Cell(x, y, 0).Temperature;
+					// // Up
+					// cellsMesh[x, y, (int)AreaOrientation.Up].Temperature =
+					// 	(float)cells.surfaceCellNodes[AreaOrientation.Up].Surface.Cell(x, y, 0).Temperature;
+					// // Forward
+					// cellsMesh[x, y, (int)AreaOrientation.Forward].Temperature =
+					// 	(float)cells.surfaceCellNodes[AreaOrientation.Forward].Surface.Cell(x, y, 0).Temperature;
+				}
 			}
 		}
 

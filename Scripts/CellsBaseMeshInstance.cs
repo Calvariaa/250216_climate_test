@@ -5,7 +5,7 @@ using _Climate.Scripts;
 
 public partial class CellsBaseMeshInstance : MeshInstance3D
 {
-	// [Export] Node3D node3D;
+	[Export] Node3D node3D;
 	StandardMaterial3D material3D;
 
 
