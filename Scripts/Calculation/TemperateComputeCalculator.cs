@@ -116,7 +116,7 @@ public class TemperatureComputeCalculator
 
 							var neighborsId = (int)orientation * Length * Length
 							 + (i + iOffset * Length + localTargetI + directionTable[(int)direction, 1] * (1 - Length)) * Length
-							  + (j + localTargetJ + directionTable[(int)direction, 0] * (1 - Length));
+							 + (j + localTargetJ + directionTable[(int)direction, 0] * (1 - Length));
 							// LocalCellsNeighborsList[currentArrayIndex] = (uint)neighborsId;
 							switch (direction)
 							{
@@ -162,9 +162,25 @@ public class TemperatureComputeCalculator
 
 	public void Calculate()
 	{
+
+
+		// (int)orientation * Length * Length + i * Length + j
+		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
+		{
+			for (int i = 0; i < Length; i++)
+			{
+				for (int j = 0; j < Length; j++)
+				{
+					LocalCellsList[(int)orientation * Length * Length + i * Length + j] = AreaCells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature + 50;
+
+				}
+			}
+		}
+
 		computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
 
 		float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0);
+		Print("Output: ", string.Join(",", computeShaderResultArray));
 		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
 			for (int i = 0; i < Length; i++)

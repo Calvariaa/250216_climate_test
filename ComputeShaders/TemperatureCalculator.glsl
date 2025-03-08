@@ -14,8 +14,6 @@ layout(set=0,binding=1,std430)buffer NeighborIndex{
     uvec4 data[];
 }neighbor_index;
 
-
-
 void main()
 {
     uint x=gl_GlobalInvocationID.x;

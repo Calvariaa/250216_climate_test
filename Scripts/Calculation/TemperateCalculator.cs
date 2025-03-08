@@ -20,7 +20,7 @@ public class TemperatureCalculator(uint length, float alpha, SurfaceAreaCells su
 
 	public void Calculate(double delta)
 	{
-		float dx2 = 1.0f / ((length - 1) << 1);
+		float dx2 = (length - 1) << 1;
 
 		// 辅助函数，用于计算温度分布的导数
 		float[,] ComputeHeatEquation(SurfaceAreaCells.SurfaceCellNode cellsNode, float[,] uk, float uk_delta, uint width, uint height, float dx2, float alpha)
@@ -63,7 +63,7 @@ public class TemperatureCalculator(uint length, float alpha, SurfaceAreaCells su
 					d2Tdx2 -= 2 * (cellsNode.Surface.Cell(x, y, 0).Temperature + (uk[x, y] * uk_delta));
 					d2Tdy2 -= 2 * (cellsNode.Surface.Cell(x, y, 0).Temperature + (uk[x, y] * uk_delta));
 
-					dTdt[x, y] = alpha * (d2Tdx2 / (dx2) + d2Tdy2 / (dx2)); // 将矩阵展平成向量
+					dTdt[x, y] = alpha * (d2Tdx2 * dx2 + d2Tdy2 * dx2); // 将矩阵展平成向量
 				}
 			}
 

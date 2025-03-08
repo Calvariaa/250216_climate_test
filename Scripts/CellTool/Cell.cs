@@ -1,4 +1,5 @@
 using Godot;
+using static Godot.GD;
 using System;
 namespace _Climate.Scripts;
 
@@ -9,7 +10,7 @@ public class Cell
 	{
 		get
 		{
-			_temperature ??= 0;
+			_temperature ??= RandRange(-10, 10);
 			return (float)_temperature;
 		}
 		set

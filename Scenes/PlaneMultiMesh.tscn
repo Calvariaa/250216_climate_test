@@ -33,3 +33,4 @@ transform = Transform3D(-4.37114e-08, 0, 1, -0.5, 0.866025, -2.18557e-08, -0.866
 multimesh = SubResource("MultiMesh_vmhkr")
 script = ExtResource("3_koba8")
 ComputePath = "res://ComputeShaders/TemperatureCalculator.glsl"
+Length = 128
