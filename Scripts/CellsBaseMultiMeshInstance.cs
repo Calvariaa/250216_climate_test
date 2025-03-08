@@ -57,7 +57,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 	public override void _Process(double delta)
 	{
 		// temperCalc.Calculate(delta);
-		// temperComputeCalc.Calculate();
+		temperComputeCalc.Calculate();
 
 		// 随机生成温度
 		if (Randf() < 0.1)

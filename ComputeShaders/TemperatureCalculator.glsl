@@ -11,16 +11,10 @@ layout(set=0,binding=0,std430)buffer LocalTemp{
 }local_temp;
 
 layout(set=0,binding=1,std430)buffer NeighborIndex{
-    float data[][];
+    uvec4 data[];
 }neighbor_index;
 
-enum Direction
-{
-    Up=0,
-    Down,
-    Left,
-    Right
-}
+
 
 void main()
 {
@@ -35,11 +29,10 @@ void main()
     
     float deltaT=0.;
     
-    deltaT+=(local_temp.data[neighbor_index.data[id][Up]]-local_temp.data[id])*.1;
-    deltaT+=(local_temp.data[neighbor_index.data[id][Down]]-local_temp.data[id])*.1;
-    deltaT+=(local_temp.data[neighbor_index.data[id][Left]]-local_temp.data[id])*.1;
-    deltaT+=(local_temp.data[neighbor_index.data[id][Right]]-local_temp.data[id])*.1;
+    deltaT+=(local_temp.data[neighbor_index.data[id].x]-local_temp.data[id])*.1;
+    deltaT+=(local_temp.data[neighbor_index.data[id].y]-local_temp.data[id])*.1;
+    deltaT+=(local_temp.data[neighbor_index.data[id].z]-local_temp.data[id])*.1;
+    deltaT+=(local_temp.data[neighbor_index.data[id].w]-local_temp.data[id])*.1;
     
     local_temp.data[id]+=deltaT;
-    
 }

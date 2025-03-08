@@ -13,7 +13,8 @@ public class TemperatureComputeCalculator
 
 
 	private float[] LocalCellsList;
-	private uint[] LocalCellsNeighborsList;
+	// private uint[] LocalCellsNeighborsList;
+	private Vector4I[] LocalCellsNeighborsVector;
 
 	private uint GroupSize;
 
@@ -27,14 +28,15 @@ public class TemperatureComputeCalculator
 		Alpha = alpha;
 		AreaCells = surfaceAreaCells;
 		LocalCellsList = new float[length * length * 6];
-		LocalCellsNeighborsList = new uint[length * length * 6 * 4];
+		// LocalCellsNeighborsList = new uint[length * length * 6 * 4];
+		LocalCellsNeighborsVector = new Vector4I[length * length * 6];
 
 
 		GroupSize = length / 32;
 
 		InitializingLocalList();
 
-		computeShaderInstance = new ComputeShaderInstance(path, [(typeof(float[]), LocalCellsList), (typeof(uint[]), LocalCellsNeighborsList)]);
+		computeShaderInstance = new ComputeShaderInstance(path, [(typeof(float[]), LocalCellsList), (typeof(Vector4I[]), LocalCellsNeighborsVector)]);
 	}
 
 
@@ -70,6 +72,7 @@ public class TemperatureComputeCalculator
 				{
 					LocalCellsList[(int)orientation * Length * Length + i * Length + j] = AreaCells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature;
 
+					var currentVectorIndex = (int)orientation * Length * Length + i * Length + j;
 					foreach (AreaDirection direction in Enum.GetValues(typeof(AreaDirection)))
 					{
 						var currentArrayIndex = (int)orientation * Length * Length * 4 + i * Length * 4 + j * 4 + (int)direction;
@@ -88,16 +91,48 @@ public class TemperatureComputeCalculator
 							// && (iOffset > targetIMov / Length && (iOffset + 1) < targetIMov / Length)
 							)
 						{
-							LocalCellsNeighborsList[currentArrayIndex]
-								= (uint)((int)orientation * Length * Length + targetIMov * Length + targetJMov);
+							var neighborsId = (int)orientation * Length * Length + targetIMov * Length + targetJMov;
+							// LocalCellsNeighborsList[currentArrayIndex] = (uint)neighborsId;
+							switch (direction)
+							{
+								case AreaDirection.Up:
+									LocalCellsNeighborsVector[currentVectorIndex].X = (int)neighborsId;
+									break;
+								case AreaDirection.Down:
+									LocalCellsNeighborsVector[currentVectorIndex].Y = (int)neighborsId;
+									break;
+								case AreaDirection.Left:
+									LocalCellsNeighborsVector[currentVectorIndex].Z = (int)neighborsId;
+									break;
+								case AreaDirection.Right:
+									LocalCellsNeighborsVector[currentVectorIndex].W = (int)neighborsId;
+									break;
+							}
 						}
 						else
 						{
 							var localTargetI = SurfaceCells.GetRotatedI(i % (int)Length, j, Length, targetNeighbor.Rotation);
 							var localTargetJ = SurfaceCells.GetRotatedI(i % (int)Length, j, Length, targetNeighbor.Rotation);
 
-							LocalCellsNeighborsList[currentArrayIndex]
-								= (uint)((int)orientation * Length * Length + (i + iOffset * Length + localTargetI + directionTable[(int)direction, 1] * (1 - Length)) * Length + (j + localTargetJ + directionTable[(int)direction, 0] * (1 - Length)));
+							var neighborsId = (int)orientation * Length * Length
+							 + (i + iOffset * Length + localTargetI + directionTable[(int)direction, 1] * (1 - Length)) * Length
+							  + (j + localTargetJ + directionTable[(int)direction, 0] * (1 - Length));
+							// LocalCellsNeighborsList[currentArrayIndex] = (uint)neighborsId;
+							switch (direction)
+							{
+								case AreaDirection.Up:
+									LocalCellsNeighborsVector[currentVectorIndex].X = (int)neighborsId;
+									break;
+								case AreaDirection.Down:
+									LocalCellsNeighborsVector[currentVectorIndex].Y = (int)neighborsId;
+									break;
+								case AreaDirection.Left:
+									LocalCellsNeighborsVector[currentVectorIndex].Z = (int)neighborsId;
+									break;
+								case AreaDirection.Right:
+									LocalCellsNeighborsVector[currentVectorIndex].W = (int)neighborsId;
+									break;
+							}
 						}
 					}
 				}
