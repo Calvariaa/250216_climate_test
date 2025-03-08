@@ -6,11 +6,13 @@ using System.Diagnostics;
 
 public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 {
+	[Export] private string ComputePath;
 	[Export] float CellSize = 0.1f;
-	[Export] int Length = 100;
-	[Export] double Alpha = 1e-4;
+	[Export] uint Length = 20;
+	[Export] float Alpha = 1e-4F;
 
 	private TemperatureCalculator temperCalc;
+	private TemperatureComputeCalculator temperComputeCalc;
 	private SurfaceAreaCells cells;
 
 	enum CellsType
@@ -40,50 +42,54 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 		Multimesh.Mesh = PlaneMesh;
 
 		// Then resize (otherwise, changing the format is not allowed)
-		Multimesh.InstanceCount = Length * Length * 6;
+		Multimesh.InstanceCount = (int)(Length * Length * 6);
 		// Maybe not all of them should be visible at first.
-		Multimesh.VisibleInstanceCount = Length * Length * 6;
+		Multimesh.VisibleInstanceCount = (int)(Length * Length * 6);
 
 		cells = new SurfaceAreaCells(Length);
 
 		temperCalc = new TemperatureCalculator(Length, Alpha, cells);
+		temperComputeCalc = new TemperatureComputeCalculator(ComputePath, Length, Alpha, cells);
 
 		MapCellsToCube();
 	}
 
 	public override void _Process(double delta)
 	{
-		temperCalc.Calculate(delta);
+		// temperCalc.Calculate(delta);
+		// temperComputeCalc.Calculate();
 
 		// 随机生成温度
 		if (Randf() < 0.1)
 		{
 			var radius = RandRange(1, 10);
-			var orintation = RandRange(0, 5);
-			var width = RandRange(radius, temperCalc.Length - radius);
-			var height = RandRange(radius, temperCalc.Length - radius);
+			var orientation = RandRange(0, 5);
+			var width = RandRange(radius, Length - radius);
+			var height = RandRange(radius, Length - radius);
 			var temperature = RandRange(-100, 100);
 
-			for (var i = 0; i < temperCalc.Length; i++)
+			for (var i = 0; i < Length; i++)
 			{
-				for (var j = 0; j < temperCalc.Length; j++)
+				for (var j = 0; j < Length; j++)
 				{
 					if (Mathf.Pow(i - width, 2) + Mathf.Pow(j - height, 2) < radius)
 					{
-						cells.surfaceCellNodes[(AreaOrientation)orintation].Surface.Cell(i, j, 0).Temperature = temperature;
+						cells.surfaceCellNodes[(AreaOrientation)orientation].Surface.Cell(i, j, 0).Temperature = temperature;
 					}
 				}
 			}
 		}
 
-		// Multimesh.SetInstanceColor((int)orintation * Length * Length + i * Length + j, Colors.Pink);
-		foreach (AreaOrientation orintation in Enum.GetValues(typeof(AreaOrientation)))
+		// Multimesh.SetInstanceColor((int)orientation * Length * Length + i * Length + j, Colors.Pink);
+		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
-			for (int i = 0; i < temperCalc.Length; i++)
+			for (int i = 0; i < Length; i++)
 			{
-				for (int j = 0; j < temperCalc.Length; j++)
+				for (int j = 0; j < Length; j++)
 				{
-					Multimesh.SetInstanceColor((int)orintation * Length * Length + i * Length + j, CalculateTemperatureColor((float)cells.surfaceCellNodes[orintation].Surface.Cell(i, j, 0).Temperature));
+					// if (i == 0) cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature = -120;
+					// 所以x==0是左，y==0是上
+					Multimesh.SetInstanceColor((int)orientation * (int)Length * (int)Length + i * (int)Length + j, CalculateTemperatureColor((float)cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature));
 				}
 			}
 		}
@@ -110,7 +116,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 	private void MapCellsToCube()
 	{
 		// Set the transform of the instances.
-		foreach (var orintation in Enum.GetValues(typeof(AreaOrientation)))
+		foreach (var orientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
 			for (int i = 0; i < Length; i++)
 			{
@@ -119,7 +125,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 					Vector3 position;
 					Vector3 rotation_axis;
 					float rotation_angle;
-					switch (orintation)
+					switch (orientation)
 					{
 						case AreaOrientation.Up:
 							position = new Vector3(
@@ -184,7 +190,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 					var multiMeshTransform =
 						new Transform3D(Basis.FromScale(new Vector3(CellSize, CellSize, CellSize)) * new Basis(rotation_axis, rotation_angle), position);
 
-					Multimesh.SetInstanceTransform((int)orintation * Length * Length + i * Length + j, multiMeshTransform);
+					Multimesh.SetInstanceTransform((int)orientation * (int)Length * (int)Length + i * (int)Length + j, multiMeshTransform);
 				}
 			}
 		}
@@ -193,14 +199,14 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 	private void MapCellsToFlat()
 	{
 		// Set the transform of the instances.
-		foreach (var orintation in Enum.GetValues(typeof(AreaOrientation)))
+		foreach (var orientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
 			for (int i = 0; i < Length; i++)
 			{
 				for (int j = 0; j < Length; j++)
 				{
 					Vector3 position;
-					switch (orintation)
+					switch (orientation)
 					{
 						case AreaOrientation.Up:
 							position = new Vector3(
@@ -251,7 +257,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 					var multiMeshTransform =
 						new Transform3D(Basis.FromScale(new Vector3(CellSize, CellSize, CellSize)), position);
 
-					Multimesh.SetInstanceTransform((int)orintation * Length * Length + i * Length + j, multiMeshTransform);
+					Multimesh.SetInstanceTransform((int)orientation * (int)Length * (int)Length + i * (int)Length + j, multiMeshTransform);
 				}
 			}
 		}

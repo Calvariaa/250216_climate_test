@@ -24,7 +24,7 @@ public partial class CellsBaseMeshInstance : MeshInstance3D
 		}
 	}
 
-	private AreaOrientation? _orientation;
+	// private AreaOrientation? _orientation;
 	// public AreaOrientation Orientation
 	// {
 	// 	get

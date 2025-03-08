@@ -9,8 +9,8 @@ public partial class CellsBaseNode : Node
 	MeshInstance3D cellPrefab;
 
 	[Export] float CellSize = 0.1f;
-	[Export] int Length = 25;
-	[Export] double Alpha = 1e-4;
+	[Export] uint Length = 25;
+	[Export] float Alpha = 1e-4F;
 	CellsBaseMeshInstance[,,] cellsMesh;
 
 	private TemperatureCalculator temperCalc;

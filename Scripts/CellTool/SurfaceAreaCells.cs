@@ -26,7 +26,7 @@ public enum AreaDirection : int
 
 public class SurfaceAreaCells
 {
-	private int Length;
+	private uint Length;
 
 	// 体表包含6个面
 	// 名字太长了但是不这样写enum就得强制转换为int做数组下标我讨厌你
@@ -82,14 +82,14 @@ public class SurfaceAreaCells
 	public SurfaceCellsAreaOrientationArray<AreaOrientation, SurfaceCellNode> surfaceCellNodes =
 		new SurfaceCellsAreaOrientationArray<AreaOrientation, SurfaceCellNode>();
 
-	public SurfaceAreaCells(int length)
+	public SurfaceAreaCells(uint length)
 	{
 		Length = length;
 
 		foreach (AreaOrientation dir in Enum.GetValues(typeof(AreaOrientation)))
 		{
 			surfaceCellNodes[dir] = new SurfaceCellNode(
-				new SurfaceCells(Length)
+				new SurfaceCells(Length, dir)
 			);
 		}
 

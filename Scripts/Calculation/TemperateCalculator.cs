@@ -2,10 +2,10 @@ using Godot;
 using static Godot.GD;
 namespace _Climate.Scripts;
 
-public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells surfaceAreaCells)
+public class TemperatureCalculator(uint length, float alpha, SurfaceAreaCells surfaceAreaCells)
 {
-	public readonly int Length = length;
-	public readonly double Alpha = alpha;
+	public readonly uint Length = length;
+	public readonly float Alpha = alpha;
 
 	public SurfaceAreaCells AreaCells = surfaceAreaCells;
 
@@ -15,24 +15,24 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 	public SurfaceAreaCells.SurfaceCellNode CellsNodeRight = surfaceAreaCells.surfaceCellNodes[AreaOrientation.Right];
 	public SurfaceAreaCells.SurfaceCellNode CellsNodeUp = surfaceAreaCells.surfaceCellNodes[AreaOrientation.Up];
 	public SurfaceAreaCells.SurfaceCellNode CellsNodeForward = surfaceAreaCells.surfaceCellNodes[AreaOrientation.Forward];
-	// public SurfaceCells Cells = surfaceAreaCells.surfaceCellNodes[AreaOrientation.Up].Surface;
+
 	private uint _averageCount = 0;
 
 	public void Calculate(double delta)
 	{
-		var dx2 = 1.0 / ((length - 1) << 1);
+		float dx2 = 1.0f / ((length - 1) << 1);
 
 		// 辅助函数，用于计算温度分布的导数
-		double[,] ComputeHeatEquation(SurfaceAreaCells.SurfaceCellNode cellsNode, double[,] uk, double uk_delta, int width, int height, double dx2, double alpha)
+		float[,] ComputeHeatEquation(SurfaceAreaCells.SurfaceCellNode cellsNode, float[,] uk, float uk_delta, uint width, uint height, float dx2, float alpha)
 		{
-			uk ??= new double[width, height];
-			double[,] dTdt = new double[width, height];
+			uk ??= new float[width, height];
+			float[,] dTdt = new float[width, height];
 			for (int x = 0; x < width; x++)
 			{
 				for (int y = 0; y < height; y++)
 				{
-					double d2Tdx2 = 0;
-					double d2Tdy2 = 0;
+					float d2Tdx2 = 0;
+					float d2Tdy2 = 0;
 
 					if (x > 0) d2Tdx2 +=
 						cellsNode.Surface.Cell(x - 1, y, 0).Temperature + uk[x - 1, y] * uk_delta;
@@ -45,7 +45,7 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 
 					if (x == 0) d2Tdx2 +=
 						cellsNode.Neighbors[AreaDirection.Left].Node.Surface.
-							Cell(width - 1, y, cellsNode.Neighbors[AreaDirection.Left].Rotation).
+							Cell((int)width - 1, y, cellsNode.Neighbors[AreaDirection.Left].Rotation).
 								Temperature + uk[width - 1, y] * uk_delta;
 					if (x == width - 1) d2Tdx2 +=
 						cellsNode.Neighbors[AreaDirection.Right].Node.Surface.
@@ -53,7 +53,7 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 								Temperature + uk[0, y] * uk_delta;
 					if (y == 0) d2Tdy2 +=
 						cellsNode.Neighbors[AreaDirection.Up].Node.Surface.
-							Cell(x, height - 1, cellsNode.Neighbors[AreaDirection.Up].Rotation).
+							Cell(x, (int)height - 1, cellsNode.Neighbors[AreaDirection.Up].Rotation).
 								Temperature + uk[x, height - 1] * uk_delta;
 					if (y == height - 1) d2Tdy2 +=
 						cellsNode.Neighbors[AreaDirection.Down].Node.Surface.
@@ -75,7 +75,7 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 
 		// https://www.bilibili.com/opus/689834819427762213
 		// 看看六阶, 要用
-		void rk4(SurfaceAreaCells.SurfaceCellNode cellsNode, double dt, int width, int height, double dx2, double alpha)
+		void rk4(SurfaceAreaCells.SurfaceCellNode cellsNode, float dt, uint width, uint height, float dx2, float alpha)
 		{
 			// var T = cellsNode.Surface;
 
@@ -83,9 +83,9 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 			// 小朋友想一想你能不能用你妈隐式方法因为你他妈的算太慢了
 			// 计算k1234
 			var k1 = ComputeHeatEquation(cellsNode, null, 0, width, height, dx2, alpha);
-			var k2 = ComputeHeatEquation(cellsNode, k1, delta / 2, width, height, dx2, alpha);
-			var k3 = ComputeHeatEquation(cellsNode, k2, delta / 2, width, height, dx2, alpha);
-			var k4 = ComputeHeatEquation(cellsNode, k3, delta, width, height, dx2, alpha);
+			var k2 = ComputeHeatEquation(cellsNode, k1, (float)delta / 2.0f, width, height, dx2, alpha);
+			var k3 = ComputeHeatEquation(cellsNode, k2, (float)delta / 2.0f, width, height, dx2, alpha);
+			var k4 = ComputeHeatEquation(cellsNode, k3, (float)delta, width, height, dx2, alpha);
 
 			// 更新u_i^(n+1)
 			for (var x = 0; x < width; x++)
@@ -100,12 +100,12 @@ public class TemperatureCalculator(int length, double alpha, SurfaceAreaCells su
 		}
 
 		// 数学逼提醒了我用龙格库塔法求偏微分，让我们赞美数学逼
-		rk4(CellsNodeLeft, delta, Length, Length, dx2, Alpha);
-		rk4(CellsNodeDown, delta, Length, Length, dx2, Alpha);
-		rk4(CellsNodeBackward, delta, Length, Length, dx2, Alpha);
-		rk4(CellsNodeRight, delta, Length, Length, dx2, Alpha);
-		rk4(CellsNodeUp, delta, Length, Length, dx2, Alpha);
-		rk4(CellsNodeForward, delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeLeft, (float)delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeDown, (float)delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeBackward, (float)delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeRight, (float)delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeUp, (float)delta, Length, Length, dx2, Alpha);
+		rk4(CellsNodeForward, (float)delta, Length, Length, dx2, Alpha);
 
 
 		if (_averageCount < 1000)

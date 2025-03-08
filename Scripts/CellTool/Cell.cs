@@ -4,13 +4,13 @@ namespace _Climate.Scripts;
 
 public class Cell
 {
-	private double? _temperature;
-	public double Temperature
+	private float? _temperature;
+	public float Temperature
 	{
 		get
 		{
 			_temperature ??= 0;
-			return (double)_temperature;
+			return (float)_temperature;
 		}
 		set
 		{
