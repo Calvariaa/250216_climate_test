@@ -7,6 +7,7 @@ using System.Diagnostics;
 public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 {
 	[Export] private string ComputePath;
+	[Export] private string MaterialShaderPath;
 	[Export] float CellSize = 0.1f;
 	[Export] uint Length = 128;
 	[Export] float Alpha = 1e-4F;
@@ -32,9 +33,16 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 		Multimesh.UseColors = true;
 		// Set the format first.
 
-		var Material = new StandardMaterial3D();
-		Material.VertexColorUseAsAlbedo = true;
-		Material.AlbedoColor = Colors.White;
+		// var Material = new StandardMaterial3D();
+		// Material.VertexColorUseAsAlbedo = true;
+		// Material.AlbedoColor = Colors.White;
+
+		var Material = new ShaderMaterial();
+		Material.Shader = new Shader();
+		// Material.Shader.ResourcePath = MaterialShaderPath;
+		Material.Shader.TakeOverPath(MaterialShaderPath);
+		Print(Material.Shader.ResourcePath);
+		Multimesh.UseCustomData = true;
 
 		// var PlaneMesh = new PointMesh();
 		var PlaneMesh = new PlaneMesh();
@@ -91,7 +99,9 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 				{
 					// if (i == 0) cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature = -120;
 					// 所以x==0是左，y==0是上
-					Multimesh.SetInstanceColor((int)orientation * (int)Length * (int)Length + i * (int)Length + j, CalculateTemperatureColor((float)cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature));
+					// Multimesh.SetInstanceColor((int)orientation * (int)Length * (int)Length + i * (int)Length + j, CalculateTemperatureColor((float)cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature));
+
+					Multimesh.SetInstanceCustomData((int)orientation * (int)Length * (int)Length + i * (int)Length + j, new Color((float)cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature, 0, 0, 0));
 				}
 			}
 		}

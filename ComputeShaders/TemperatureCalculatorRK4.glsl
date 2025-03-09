@@ -4,20 +4,25 @@
 
 layout(local_size_x=32,local_size_y=32,local_size_z=1)in;
 
-layout(set=0,binding=0,std430)buffer LocalTemp{
+layout(set=0,binding=0,std430)restrict buffer LocalTemp{
     float data[];
 }local_temp;
 
-layout(set=0,binding=1,std430)buffer NeighborIndex{
+layout(set=0,binding=1,std430)restrict readonly buffer NeighborIndex{
     uvec4 data[];
 }neighbor_index;
 
-layout(set=0,binding=2,std430)buffer DeltaTime{
+layout(set=0,binding=2,std430)restrict buffer DeltaTime{
     float timestamp;
 }delta_time;
 
+// layout(push_constant, std430) uniform Params {
+// 	vec2 raster_size;
+// 	vec2 reserved;
+// } params;
+
 const float alpha=1e-4F;
-const uint grid_size=128;
+const uint grid_size=256;
 const float dx2_inv=(grid_size-1)<<1;
 
 float computeHeatEquation(uint id,float temp_self,float temp_left,float temp_right,float temp_bottom,float temp_top){

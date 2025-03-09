@@ -5,6 +5,7 @@ using _Climate.Scripts;
 
 public partial class CellsBaseNode : Node
 {
+	[Export] Node3D node3D;
 	[Export] PackedScene cellScene;
 	MeshInstance3D cellPrefab;
 
@@ -15,6 +16,7 @@ public partial class CellsBaseNode : Node
 
 	private TemperatureCalculator temperCalc;
 	private SurfaceAreaCells cells;
+	StandardMaterial3D material3D;
 
 	// 温度分布图，变温分布图，气温距平分布图
 	private enum MapType
