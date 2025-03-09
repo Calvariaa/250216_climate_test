@@ -10,7 +10,8 @@ public class Cell
 	{
 		get
 		{
-			_temperature ??= RandRange(-10, 10);
+			// _temperature ??= RandRange(-10, 10);
+			_temperature ??= RandRange(-120, 120);
 			return (float)_temperature;
 		}
 		set

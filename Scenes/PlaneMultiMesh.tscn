@@ -1,17 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://ce4v8qrs77e6v"]
+[gd_scene load_steps=5 format=3 uid="uid://ce4v8qrs77e6v"]
 
 [ext_resource type="Script" uid="uid://cguifpylnb1u0" path="res://Scripts/camera_node_3d.gd" id="2_4oip7"]
 [ext_resource type="Script" uid="uid://p7usvwvkf565" path="res://Scripts/CellsBaseMultiMeshInstance.cs" id="3_koba8"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4oip7"]
-
-[sub_resource type="PointMesh" id="PointMesh_koba8"]
-material = SubResource("StandardMaterial3D_4oip7")
+[sub_resource type="PlaneMesh" id="PlaneMesh_4oip7"]
 
 [sub_resource type="MultiMesh" id="MultiMesh_vmhkr"]
 transform_format = 1
 use_colors = true
-mesh = SubResource("PointMesh_koba8")
+mesh = SubResource("PlaneMesh_4oip7")
 
 [node name="PlaneMultiMesh" type="Node3D"]
 
@@ -32,5 +29,4 @@ transform = Transform3D(-4.37114e-08, 0, 1, -0.5, 0.866025, -2.18557e-08, -0.866
 [node name="CellsBaseMultiMeshInstance" type="MultiMeshInstance3D" parent="."]
 multimesh = SubResource("MultiMesh_vmhkr")
 script = ExtResource("3_koba8")
-ComputePath = "res://ComputeShaders/TemperatureCalculator.glsl"
-Length = 128
+ComputePath = "res://ComputeShaders/TemperatureCalculatorRK4.glsl"

@@ -1,5 +1,3 @@
-
-
 #[compute]
 
 #version 450
@@ -14,6 +12,10 @@ layout(set=0,binding=1,std430)buffer NeighborIndex{
     uvec4 data[];
 }neighbor_index;
 
+layout(set=0,binding=2,std430)buffer DeltaTime{
+    float timestamp;
+}delta_time;
+
 void main()
 {
     uint x=gl_GlobalInvocationID.x;
@@ -27,10 +29,10 @@ void main()
     
     float deltaT=0.;
     
-    deltaT+=(local_temp.data[neighbor_index.data[id].x]-local_temp.data[id])*.1;
-    deltaT+=(local_temp.data[neighbor_index.data[id].y]-local_temp.data[id])*.1;
-    deltaT+=(local_temp.data[neighbor_index.data[id].z]-local_temp.data[id])*.1;
-    deltaT+=(local_temp.data[neighbor_index.data[id].w]-local_temp.data[id])*.1;
+    deltaT+=delta_time.timestamp*(local_temp.data[neighbor_index.data[id].x]-local_temp.data[id]*.8);
+    deltaT+=delta_time.timestamp*(local_temp.data[neighbor_index.data[id].y]-local_temp.data[id]*.8);
+    deltaT+=delta_time.timestamp*(local_temp.data[neighbor_index.data[id].z]-local_temp.data[id]*.8);
+    deltaT+=delta_time.timestamp*(local_temp.data[neighbor_index.data[id].w]-local_temp.data[id]*.8);
     
     local_temp.data[id]+=deltaT;
 }

@@ -23,7 +23,7 @@ public class ComputeShaderInstance
 	/// 构造函数,用于生成实例
 	/// </summary>
 	/// <param name="path">计算着色器的路径</param>
-	/// <param name="inputs">输入的参数,使用元组,List[(数据类型,数据),xxx]</param>
+	/// <param name="inputs">输入的参数,使用元组,List[(数据类型,数据),xxx],目前支持的类型:int,float,int[],float[],vector4i[]</param>
 	/// <returns></returns>
 	public ComputeShaderInstance(string path, List<(Type, object)> inputs)
 	{
@@ -52,9 +52,6 @@ public class ComputeShaderInstance
 					break;
 				case Type t when t == typeof(int[]):
 					Buffers.Add(IntArrayToBuffer((int[])inputs[i].Item2));
-					break;
-				case Type t when t == typeof(uint[]):
-					Buffers.Add(UIntArrayToBuffer((uint[])inputs[i].Item2));
 					break;
 				case Type t when t == typeof(Vector4I[]):
 					Buffers.Add(Vector4IArrayToBuffer((Vector4I[])inputs[i].Item2));
@@ -89,6 +86,85 @@ public class ComputeShaderInstance
 
 		ComputePipeline = RD.ComputePipelineCreate(ComputeShader);
 	}
+
+	// 更新现有缓冲区内容
+	public void UpdateBuffer<T>(int bufferIndex, T data)
+	{
+		if (bufferIndex < 0 || bufferIndex >= Buffers.Count)
+			throw new IndexOutOfRangeException($"无效的缓冲区索引: {bufferIndex}");
+
+		Rid buffer = Buffers[bufferIndex];
+		byte[] bytes = SerializeData(data);
+
+		// 确保GPU操作完成
+
+		RD.BufferUpdate(
+			buffer: buffer,
+			offset: 0,
+			sizeBytes: (uint)bytes.Length,
+			data: bytes
+		);
+		RD.Submit();
+		RD.Sync();
+	}
+
+	// 通用数据序列化方法
+	private byte[] SerializeData<T>(T data)
+	{
+		if (data is float f)
+			return BitConverter.GetBytes(f);
+		if (data is float[] fArr)
+			return FloatArrayToBytes(fArr);
+		if (data is int i)
+			return BitConverter.GetBytes(i);
+		if (data is int[] iArr)
+			return IntArrayToBytes(iArr);
+		if (data is Vector4I vec4i)
+			return Vector4IToBytes(vec4i);
+		if (data is Vector4I[] vec4iArr)
+			return Vector4IArrayToBytes(vec4iArr);
+
+		throw new NotSupportedException($"不支持的类型: {typeof(T).Name}");
+	}
+
+	// 各种类型序列化方法
+	private byte[] FloatArrayToBytes(float[] data)
+	{
+		byte[] bytes = new byte[data.Length * sizeof(float)];
+		Buffer.BlockCopy(data, 0, bytes, 0, bytes.Length);
+		return bytes;
+	}
+
+	private byte[] IntArrayToBytes(int[] data)
+	{
+		byte[] bytes = new byte[data.Length * sizeof(int)];
+		Buffer.BlockCopy(data, 0, bytes, 0, bytes.Length);
+		return bytes;
+	}
+
+	private byte[] Vector4IToBytes(Vector4I data)
+	{
+		byte[] bytes = new byte[16];
+		Buffer.BlockCopy(BitConverter.GetBytes(data.X), 0, bytes, 0, 4);
+		Buffer.BlockCopy(BitConverter.GetBytes(data.Y), 0, bytes, 4, 4);
+		Buffer.BlockCopy(BitConverter.GetBytes(data.Z), 0, bytes, 8, 4);
+		Buffer.BlockCopy(BitConverter.GetBytes(data.W), 0, bytes, 12, 4);
+		return bytes;
+	}
+
+	private byte[] Vector4IArrayToBytes(Vector4I[] data)
+	{
+		byte[] bytes = new byte[data.Length * 16];
+		for (int i = 0; i < data.Length; i++)
+		{
+			Buffer.BlockCopy(BitConverter.GetBytes(data[i].X), 0, bytes, i * 16, 4);
+			Buffer.BlockCopy(BitConverter.GetBytes(data[i].Y), 0, bytes, i * 16 + 4, 4);
+			Buffer.BlockCopy(BitConverter.GetBytes(data[i].Z), 0, bytes, i * 16 + 8, 4);
+			Buffer.BlockCopy(BitConverter.GetBytes(data[i].W), 0, bytes, i * 16 + 12, 4);
+		}
+		return bytes;
+	}
+
 
 
 	/// <summary>
@@ -162,13 +238,6 @@ public class ComputeShaderInstance
 	}
 
 	private Rid IntArrayToBuffer(int[] data)
-	{
-		byte[] bytes = new byte[data.Length * sizeof(int)];
-		Buffer.BlockCopy(data, 0, bytes, 0, bytes.Length);
-		return RD.StorageBufferCreate((uint)bytes.Length, bytes);
-	}
-
-	private Rid UIntArrayToBuffer(uint[] data)
 	{
 		byte[] bytes = new byte[data.Length * sizeof(int)];
 		Buffer.BlockCopy(data, 0, bytes, 0, bytes.Length);

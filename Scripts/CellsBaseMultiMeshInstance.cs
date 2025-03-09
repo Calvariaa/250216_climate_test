@@ -8,7 +8,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 {
 	[Export] private string ComputePath;
 	[Export] float CellSize = 0.1f;
-	[Export] uint Length = 20;
+	[Export] uint Length = 128;
 	[Export] float Alpha = 1e-4F;
 
 	private TemperatureCalculator temperCalc;
@@ -32,12 +32,14 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 		Multimesh.UseColors = true;
 		// Set the format first.
 
-		var PlaneMesh = new PlaneMesh();
 		var Material = new StandardMaterial3D();
 		Material.VertexColorUseAsAlbedo = true;
 		Material.AlbedoColor = Colors.White;
-		PlaneMesh.Material = Material;
+
+		// var PlaneMesh = new PointMesh();
+		var PlaneMesh = new PlaneMesh();
 		PlaneMesh.Size = new Vector2(1.0f, 1.0f);
+		PlaneMesh.Material = Material;
 
 		Multimesh.Mesh = PlaneMesh;
 
@@ -48,7 +50,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 
 		cells = new SurfaceAreaCells(Length);
 
-		temperCalc = new TemperatureCalculator(Length, Alpha, cells);
+		// temperCalc = new TemperatureCalculator(Length, Alpha, cells);
 		temperComputeCalc = new TemperatureComputeCalculator(ComputePath, Length, Alpha, cells);
 
 		MapCellsToCube();
@@ -57,12 +59,12 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 	public override void _Process(double delta)
 	{
 		// temperCalc.Calculate(delta);
-		temperComputeCalc.Calculate();
+		temperComputeCalc.Calculate(delta);
 
 		// 随机生成温度
 		if (Randf() < 0.1)
 		{
-			var radius = RandRange(1, 10);
+			var radius = RandRange(1, 100);
 			var orientation = RandRange(0, 5);
 			var width = RandRange(radius, Length - radius);
 			var height = RandRange(radius, Length - radius);
