@@ -1,10 +1,11 @@
 extends Node3D
+var node: Node3D
 var camera: Camera3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	camera = $Camera3D
-	pass
+	camera = get_node("CameraX/Camera3D")
+	node = get_node("CameraX")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -62,7 +63,9 @@ func _update_camera(event: InputEvent) -> void:
 
 			# rotate(Vector3(1, 0, 0), deg_to_rad(displacement.y * mouse_rotation_sensitivity))
 			# rotate(Vector3(0, 1, 0), deg_to_rad(-displacement.x * mouse_rotation_sensitivity))
-			rotate_x(deg_to_rad(-displacement.y * mouse_rotation_sensitivity));
+
+			if abs(node.rotation.x - 1e-6) < PI / 2 or node.rotation.x * displacement.y > 0:
+				node.rotate_x(deg_to_rad(-displacement.y * mouse_rotation_sensitivity));
 			rotate_y(deg_to_rad(-displacement.x * mouse_rotation_sensitivity));
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
