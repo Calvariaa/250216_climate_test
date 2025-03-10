@@ -16,14 +16,17 @@ layout(set=0,binding=2,std430)restrict buffer DeltaTime{
     float timestamp;
 }delta_time;
 
-// layout(push_constant, std430) uniform Params {
-// 	vec2 raster_size;
-// 	vec2 reserved;
-// } params;
+layout(set=0,binding=3,std430)buffer readonly Alpha{
+    float data;
+}global_alpha;
 
-const float alpha=1e-4F;
-const uint grid_size=256;
-const float dx2_inv=(grid_size-1)<<1;
+layout(set=0,binding=4,std430)buffer readonly FaceLength{
+    uint data;
+}face_length;
+
+
+float alpha=global_alpha.data;
+float dx2_inv=(face_length.data-1)<<1*6;
 
 float computeHeatEquation(uint id,float temp_self,float temp_left,float temp_right,float temp_bottom,float temp_top){
     float d2x=(temp_left+temp_right-2.*temp_self)*dx2_inv;

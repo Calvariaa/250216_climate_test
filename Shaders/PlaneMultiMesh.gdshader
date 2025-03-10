@@ -1,5 +1,6 @@
 shader_type spatial;
 
+
 vec4 hsv2rgb(vec4 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
@@ -23,9 +24,12 @@ void vertex() {
 }
 
 void fragment() {
+    //static int i = 0;
     //ALBEDO = color;
-	ALBEDO = vec3(COLOR.b,COLOR.g,COLOR.r);
-}
+	 ALBEDO = COLOR.rgb;
+
+    // uint id=vertex_instance_id;
+}  
 
 //void light() {
 //    // Called for every pixel for every light affecting the material.

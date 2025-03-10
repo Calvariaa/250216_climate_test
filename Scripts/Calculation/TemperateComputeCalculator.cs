@@ -42,7 +42,9 @@ public class TemperatureComputeCalculator
 		[
 			(typeof(float[]), LocalCellsList),
 			(typeof(Vector4I[]), LocalCellsNeighborsVector),
-			(typeof(float), LocalDeltaTime)
+			(typeof(float), LocalDeltaTime),
+			(typeof(float), (float)Alpha),
+			(typeof(uint), Length)
 		]);
 	}
 

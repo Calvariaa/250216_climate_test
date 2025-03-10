@@ -9,7 +9,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 	[Export] private string ComputePath;
 	[Export] private string MaterialShaderPath;
 	[Export] float CellSize = 0.1f;
-	[Export] uint Length = 128;
+	[Export] uint Length = 256;
 	[Export] float Alpha = 1e-4F;
 
 	private TemperatureCalculator temperCalc;
@@ -30,18 +30,19 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 		Multimesh = new MultiMesh();
 
 		Multimesh.TransformFormat = MultiMesh.TransformFormatEnum.Transform3D;
-		Multimesh.UseColors = true;
+		// Multimesh.UseColors = true;
 		// Set the format first.
 
 		// var Material = new StandardMaterial3D();
 		// Material.VertexColorUseAsAlbedo = true;
 		// Material.AlbedoColor = Colors.White;
 
+
 		var Material = new ShaderMaterial();
-		Material.Shader = new Shader();
-		// Material.Shader.ResourcePath = MaterialShaderPath;
-		Material.Shader.TakeOverPath(MaterialShaderPath);
-		Print(Material.Shader.ResourcePath);
+
+		// var Texture = new Texture3Drd();
+		// Texture.
+		
 		Multimesh.UseCustomData = true;
 
 		// var PlaneMesh = new PointMesh();
@@ -72,7 +73,7 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 		// 随机生成温度
 		if (Randf() < 0.1)
 		{
-			var radius = RandRange(1, 100);
+			var radius = RandRange(1, Length);
 			var orientation = RandRange(0, 5);
 			var width = RandRange(radius, Length - radius);
 			var height = RandRange(radius, Length - radius);
@@ -108,22 +109,22 @@ public partial class CellsBaseMultiMeshInstance : MultiMeshInstance3D
 	}
 
 
-	private Color CalculateTemperatureColor(float temperature)
-	{
-		float clampedTemp = Mathf.Clamp(temperature, -120, 120);
-		float hue;
+	// private Color CalculateTemperatureColor(float temperature)
+	// {
+	// 	float clampedTemp = Mathf.Clamp(temperature, -120, 120);
+	// 	float hue;
 
-		if (clampedTemp > 0)
-		{
-			hue = (65.0f - clampedTemp * 13 / 24.0f) / 360.0f;
-		}
-		else
-		{
-			hue = (65.0f - clampedTemp * 47 / 24.0f) / 360.0f;
-		}
+	// 	if (clampedTemp > 0)
+	// 	{
+	// 		hue = (65.0f - clampedTemp * 13 / 24.0f) / 360.0f;
+	// 	}
+	// 	else
+	// 	{
+	// 		hue = (65.0f - clampedTemp * 47 / 24.0f) / 360.0f;
+	// 	}
 
-		return Color.FromHsv(hue, 0.64f, 1);
-	}
+	// 	return Color.FromHsv(hue, 0.64f, 1);
+	// }
 
 	private void MapCellsToCube()
 	{

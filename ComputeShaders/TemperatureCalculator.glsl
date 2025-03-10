@@ -16,6 +16,15 @@ layout(set=0,binding=2,std430)buffer DeltaTime{
     float timestamp;
 }delta_time;
 
+layout(set=0,binding=3,std430)buffer Alpha{
+    float data;
+}alpha;
+
+layout(set=0,binding=4,std430)buffer FaceLength{
+    uint data;
+}face_length;
+
+
 void main()
 {
     uint x=gl_GlobalInvocationID.x;

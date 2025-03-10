@@ -53,6 +53,9 @@ public class ComputeShaderInstance
 				case Type t when t == typeof(int[]):
 					Buffers.Add(IntArrayToBuffer((int[])inputs[i].Item2));
 					break;
+				case Type t when t == typeof(uint):
+					Buffers.Add(UIntToBuffer((uint)inputs[i].Item2));
+					break;
 				case Type t when t == typeof(Vector4I[]):
 					Buffers.Add(Vector4IArrayToBuffer((Vector4I[])inputs[i].Item2));
 					break;
@@ -234,6 +237,14 @@ public class ComputeShaderInstance
 		byte[] bytes = new byte[sizeof(int)];
 		byte[] intBytes = BitConverter.GetBytes(data);
 		Buffer.BlockCopy(intBytes, 0, bytes, 0, intBytes.Length);
+		return RD.StorageBufferCreate((uint)bytes.Length, bytes);
+	}
+
+	private Rid UIntToBuffer(uint data)
+	{
+		byte[] bytes = new byte[sizeof(uint)];
+		byte[] uintBytes = BitConverter.GetBytes(data);
+		Buffer.BlockCopy(uintBytes, 0, bytes, 0, uintBytes.Length);
 		return RD.StorageBufferCreate((uint)bytes.Length, bytes);
 	}
 
