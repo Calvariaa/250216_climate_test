@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bba0cjfoheye"]
+[gd_scene load_steps=7 format=3 uid="uid://bba0cjfoheye"]
 
 [ext_resource type="Script" uid="uid://cguifpylnb1u0" path="res://Scripts/camera_node_3d.gd" id="1_na5q0"]
 [ext_resource type="Shader" uid="uid://d3vdyni4b2du" path="res://Shaders/PlaneMultiMesh.gdshader" id="2_k3lqd"]
+[ext_resource type="Script" uid="uid://dniydk6c8x7gn" path="res://Scripts/SurfacesMultiMeshInstance3d.cs" id="3_8nwxo"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8nwxo"]
 render_priority = 0
@@ -36,3 +37,4 @@ spot_attenuation = 0.0
 [node name="SurfacesMultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
 material_override = SubResource("ShaderMaterial_8nwxo")
 multimesh = SubResource("MultiMesh_wi0ka")
+script = ExtResource("3_8nwxo")
