@@ -1,7 +1,18 @@
 shader_type spatial;
 
-// uniform uint cell_length;
+uniform uint cell_length;
 uniform float[256*256*6] temperature_data;
+uniform sampler2D temperature_texture;
+
+uvec2 id_to_uv(uint id){
+    uint face_size = cell_length;
+    uint face_id = id / (face_size * face_size);
+    uint local_id = id % (face_size * face_size);
+    return uvec2(
+        face_id * face_size + (local_id % face_size),
+        local_id / face_size
+    );
+}
 
 vec4 hsv2rgb(vec4 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -12,8 +23,10 @@ vec4 hsv2rgb(vec4 c) {
 void vertex() {
     // Called for every vertex the material is visible on.
 
+    uint id = uint(INSTANCE_CUSTOM.x)
+
     // float clampedTemp = clamp(INSTANCE_CUSTOM.x , -120.0, 120.0);
-    float clampedTemp = clamp(temperature_data[uint(INSTANCE_CUSTOM.x)] , -120.0, 120.0);
+    float clampedTemp = clamp(temperature_data[id] , -120.0, 120.0);
     //float clampedTemp = clamp(float(int(INSTANCE_CUSTOM.x) % 120) , -120.0, 120.0);
     float hue;
 

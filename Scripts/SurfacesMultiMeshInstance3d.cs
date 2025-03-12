@@ -11,11 +11,19 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 	[Export] uint Length = 256;
 	[Export] float Alpha = 1e-4F;
 
-	private TemperatureCalculator temperCalc;
 	private TemperatureComputeCalculator temperComputeCalc;
 	private SurfaceAreaCells cells;
 	private ShaderMaterial localShaderMaterial;
 
+	// private Texture2Drd TemperatureTexture;
+
+	enum CellsType
+	{
+		CellsCube,
+		CellsFlat,
+		CellsTypeNum
+	}
+	CellsType _cellsType = CellsType.CellsCube;
 	public override void _Ready()
 	{
 		// Create the multimesh.
@@ -38,9 +46,15 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		cells = new SurfaceAreaCells(Length);
 
-		temperComputeCalc = new TemperatureComputeCalculator(ComputePath, Length, Alpha, cells);
-
 		localShaderMaterial = this.MaterialOverride as ShaderMaterial;
+
+		// TemperatureTexture = (Texture2Drd)localShaderMaterial.GetShaderParameter("temperature_texture");
+        localShaderMaterial.SetShaderParameter("cell_length", (uint)Length);
+
+
+		// Print(localShaderMaterial.GetShaderParameter("temperature_texture"));
+
+		temperComputeCalc = new TemperatureComputeCalculator(ComputePath, Length, Alpha, cells);
 
 		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
@@ -63,70 +77,14 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 	public override void _Process(double delta)
 	{
 		// localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetBuffer(0));
-		temperComputeCalc.computeShaderInstance.UpdateBuffer(2, (float)delta);
-		
+
+		temperComputeCalc.computeShaderInstance.SetBuffer((float)delta, 0, 2);
+
 		temperComputeCalc.UpdateCompute();
 
-		localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetFloatArrayResult(0));
-		return;
-		// temperCalc.Calculate(delta);
-		temperComputeCalc.Calculate(delta);
+		// localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetFloatArrayResult(0));
 
-		// 随机生成温度
-		if (Randf() < 0.1)
-		{
-			var radius = RandRange(1, Length);
-			var orientation = RandRange(0, 5);
-			var width = RandRange(radius, Length - radius);
-			var height = RandRange(radius, Length - radius);
-			var temperature = RandRange(-100, 100);
-
-			for (var i = 0; i < Length; i++)
-			{
-				for (var j = 0; j < Length; j++)
-				{
-					if (Mathf.Pow(i - width, 2) + Mathf.Pow(j - height, 2) < radius)
-					{
-						cells.surfaceCellNodes[(AreaOrientation)orientation].Surface.Cell(i, j, 0).Temperature = temperature;
-					}
-				}
-			}
-		}
-
-		// Multimesh.SetInstanceColor((int)orientation * Length * Length + i * Length + j, Colors.Pink);
-		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
-		{
-			for (int i = 0; i < Length; i++)
-			{
-				for (int j = 0; j < Length; j++)
-				{
-					// if (i == 0) cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature = -120;
-					// 所以x==0是左，y==0是上
-					// Multimesh.SetInstanceColor((int)orientation * (int)Length * (int)Length + i * (int)Length + j, CalculateTemperatureColor((float)cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature));
-
-					Multimesh.SetInstanceCustomData((int)orientation * (int)Length * (int)Length + i * (int)Length + j, new Color((float)cells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature, 0, 0, 0));
-				}
-			}
-		}
 	}
-
-
-	// private Color CalculateTemperatureColor(float temperature)
-	// {
-	// 	float clampedTemp = Mathf.Clamp(temperature, -120, 120);
-	// 	float hue;
-
-	// 	if (clampedTemp > 0)
-	// 	{
-	// 		hue = (65.0f - clampedTemp * 13 / 24.0f) / 360.0f;
-	// 	}
-	// 	else
-	// 	{
-	// 		hue = (65.0f - clampedTemp * 47 / 24.0f) / 360.0f;
-	// 	}
-
-	// 	return Color.FromHsv(hue, 0.64f, 1);
-	// }
 
 	private void MapCellsToCube()
 	{
@@ -283,10 +241,10 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
 		{
-			if (keyEvent.Keycode == Key.R)
-			{
-				temperCalc.ClearCells();
-			}
+			//if (keyEvent.Keycode == Key.R)
+			//{
+			//temperCalc.ClearCells();
+			//}
 
 			if (keyEvent.Keycode == Key.Tab)
 			{

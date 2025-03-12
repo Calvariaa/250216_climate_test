@@ -38,3 +38,4 @@ spot_attenuation = 0.0
 material_override = SubResource("ShaderMaterial_8nwxo")
 multimesh = SubResource("MultiMesh_wi0ka")
 script = ExtResource("3_8nwxo")
+ComputePath = "res://ComputeShaders/TemperatureCalculatorRK4.glsl"

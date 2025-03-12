@@ -5,13 +5,13 @@
 layout(local_size_x=32,local_size_y=32,local_size_z=1)in;
 
 layout(set=0, binding=0, r32f) uniform restrict readonly image2D temperature_readonly;
-layout(set=0, binding=1, r32f) uniform restrict writeonly image2D temperature_writeonly;
+layout(set=1, binding=0, r32f) uniform restrict writeonly image2D temperature_writeonly;
 
-layout(set=0,binding=2,std430)restrict readonly buffer NeighborIndex{
+layout(set=0,binding=1,std430)restrict readonly buffer NeighborIndex{
     uvec4 data[];
 }neighbor_index;
 
-layout(set=0,binding=3,std430)restrict buffer DeltaTime{
+layout(set=0,binding=2,std430)restrict buffer DeltaTime{
     float timestamp;
 }delta_time;
 
