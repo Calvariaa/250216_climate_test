@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://c72aa63cllcrx"]
+
+[ext_resource type="Script" uid="uid://p7usvwvkf565" path="res://Scripts/CellsBaseMultiMeshInstance.cs" id="1_sx8w0"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sx8w0"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_urumj"]
+transform_format = 1
+mesh = SubResource("PlaneMesh_sx8w0")
+
+[node name="CellsBaseMultiMeshInstance" type="MultiMeshInstance3D"]
+multimesh = SubResource("MultiMesh_urumj")
+script = ExtResource("1_sx8w0")
