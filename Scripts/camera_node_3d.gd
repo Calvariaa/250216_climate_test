@@ -23,8 +23,8 @@ var mouse_pos: Vector2
 var mouse_move_flag: bool = false
 var mouse_rotate_flag: bool = false
 var mouse_move_sensitivity: float = 0.001
-var mouse_rotation_sensitivity: float = 0.02
-var mouse_zoom_sensitivity: float = 0.1
+var mouse_rotation_sensitivity: float = 0.002
+var mouse_zoom_sensitivity: float = 0.05
 func _update_camera(event: InputEvent) -> void:
 	var distance_to_origin = camera.global_transform.origin.length()
 	# 平移：按住shift和鼠标中键
@@ -65,8 +65,8 @@ func _update_camera(event: InputEvent) -> void:
 			# rotate(Vector3(0, 1, 0), deg_to_rad(-displacement.x * mouse_rotation_sensitivity))
 
 			if abs(node.rotation.x - 1e-6) < PI / 2 or node.rotation.x * displacement.y > 0:
-				node.rotate_x(deg_to_rad(-displacement.y * mouse_rotation_sensitivity));
-			rotate_y(deg_to_rad(-displacement.x * mouse_rotation_sensitivity));
+				node.rotate_x(deg_to_rad(-displacement.y * mouse_rotation_sensitivity * distance_to_origin));
+			rotate_y(deg_to_rad(-displacement.x * mouse_rotation_sensitivity * distance_to_origin));
 		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			Input.warp_mouse(mouse_pos)

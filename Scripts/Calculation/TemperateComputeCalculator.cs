@@ -11,8 +11,10 @@ public class TemperatureComputeCalculator
 	private readonly double Alpha;
 
 
-	private float[] LocalCellsList;
+	public float[] LocalCellsList;
 	// private uint[] LocalCellsNeighborsList;
+
+	public Rid LocalCellsTextureIn, LocalCellsTextureOut;
 	private Vector4I[] LocalCellsNeighborsVector;
 	private float LocalDeltaTime;
 
@@ -42,9 +44,10 @@ public class TemperatureComputeCalculator
 
 		// texture.TextureRdRid = textureRid;
 
-
-		computeShaderInstance.SetTextureUniform(NewTextureRid(), 0, 0);
-		computeShaderInstance.SetTextureUniform(NewTextureRid(), 1, 0);
+		LocalCellsTextureIn = NewTextureRid();
+		LocalCellsTextureOut = NewTextureRid();
+		computeShaderInstance.SetTextureUniform(LocalCellsTextureIn, 0, 0);
+		computeShaderInstance.SetTextureUniform(LocalCellsTextureOut, 1, 0);
 		computeShaderInstance.SetBuffer(LocalCellsNeighborsVector, 0, 1);
 		computeShaderInstance.SetBuffer(LocalDeltaTime, 0, 2);
 
@@ -59,8 +62,8 @@ public class TemperatureComputeCalculator
 		{
 			Format = RenderingDevice.DataFormat.R32Sfloat,
 			TextureType = RenderingDevice.TextureType.Type2D,
-			Width = 256 * 6,
-			Height = 256,
+			Width = Length * 6,
+			Height = Length,
 			Depth = 1,
 			ArrayLayers = 1,
 			Mipmaps = 1,
@@ -69,9 +72,13 @@ public class TemperatureComputeCalculator
 
 		var textureRid = computeShaderInstance.RD.TextureCreate(tf, new RDTextureView(), []);
 
+		var textureUpdateState = computeShaderInstance.RD.TextureUpdate(textureRid, 0, Tool.ConvertToByteArray(LocalCellsList));
+
+		Print("textureUpdateState: ", string.Join(", ", (textureRid,textureUpdateState)));
+
 
 		// Make sure our textures are cleared.
-		computeShaderInstance.RD.TextureClear(textureRid, new Color(0, 0, 0, 0), 0, 1, 0, 1);
+		// computeShaderInstance.RD.TextureClear(textureRid, new Color(0, 0, 0, 0), 0, 1, 0, 1);
 
 		return textureRid;
 	}
@@ -109,7 +116,7 @@ public class TemperatureComputeCalculator
 				for (int j = 0; j < Length; j++)
 				{
 					// 这里应该直接写给纹理
-					// LocalCellsList[(int)orientation * Length * Length + i * Length + j] = AreaCells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature;
+					LocalCellsList[(int)orientation * Length * Length + i * Length + j] = AreaCells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature;
 
 					var currentVectorIndex = (int)orientation * Length * Length + i * Length + j;
 					foreach (AreaDirection direction in Enum.GetValues(typeof(AreaDirection)))
@@ -199,8 +206,8 @@ public class TemperatureComputeCalculator
 		// computeShaderInstance.UpdateBuffer(2, LocalDeltaTime);
 		// computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
 
-		// float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0);
-		// // Print("Output: ", string.Join(",", computeShaderResultArray));
+		float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(1, 0);
+		Print("Output: ", string.Join(",", computeShaderResultArray));
 		// foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		// {
 		// 	for (int i = 0; i < Length; i++)

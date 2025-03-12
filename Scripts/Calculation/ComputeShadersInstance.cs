@@ -63,8 +63,30 @@ public class ComputeShaderInstance
 		var rid = RD.StorageBufferCreate((uint)bytes.Length, bytes);
 		// GD.Print("Output: ", string.Join(", ", rid));
 		UniformType[rid] = RenderingDevice.UniformType.StorageBuffer;
-		// Buffers.Add((set, binding), rid);
-		Buffers[(set, binding)] = rid;
+		Buffers.Add((set, binding), rid);
+		// Buffers[(set, binding)] = rid;
+	}
+
+
+	// 更新现有缓冲区内容
+	public void UpdateBuffer<T>(T data, uint set, int binding)
+	{
+		if (binding < 0 || binding >= Buffers.Count)
+			throw new IndexOutOfRangeException($"无效的缓冲区索引: {binding}");
+
+		Rid buffer = Buffers[(set, binding)];
+		byte[] bytes = Tool.ConvertToByteArray(data);
+
+		// 确保GPU操作完成
+
+		RD.BufferUpdate(
+			buffer: buffer,
+			offset: 0,
+			sizeBytes: (uint)bytes.Length,
+			data: bytes
+		);
+		RD.Submit();
+		RD.Sync();
 	}
 
 	/// <summary>
@@ -190,6 +212,7 @@ public class ComputeShaderInstance
 		Buffer.BlockCopy(outputBytes, 0, result, 0, outputBytes.Length);
 		return result;
 	}
+
 	public Rid GetBufferRid(uint set, int binding)
 	{
 		return Buffers[(set, binding)];

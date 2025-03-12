@@ -78,11 +78,16 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 	{
 		// localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetBuffer(0));
 
-		temperComputeCalc.computeShaderInstance.SetBuffer((float)delta, 0, 2);
+		temperComputeCalc.computeShaderInstance.UpdateBuffer((float)delta, 0, 2);
 
-		temperComputeCalc.UpdateCompute();
+		// localShaderMaterial.SetShaderParameter("temperature_texture", temperComputeCalc.LocalCellsTextureOut);
+		// localShaderMaterial.SetShaderParameter("temperature_texture", Tool.ConvertToByteArray(temperComputeCalc.LocalCellsList));
+
+		// temperComputeCalc.UpdateCompute();
 
 		// localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetFloatArrayResult(0));
+
+		temperComputeCalc.Calculate(delta);
 
 	}
 
