@@ -8,7 +8,7 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 {
 	[Export] private string ComputePath;
 	[Export] float CellSize = 0.1f;
-	[Export] uint Length = 256;
+	[Export] uint Length = 32;
 	[Export] float Alpha = 1e-4F;
 
 	private TemperatureComputeCalculator temperComputeCalc;
@@ -80,7 +80,7 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		temperComputeCalc.computeShaderInstance.UpdateBuffer((float)delta, 0, 2);
 
-		// localShaderMaterial.SetShaderParameter("temperature_texture", temperComputeCalc.LocalCellsTextureOut);
+		localShaderMaterial.SetShaderParameter("temperature_texture", temperComputeCalc.computeShaderInstance.GetBufferRid(1u, 0));
 		// localShaderMaterial.SetShaderParameter("temperature_texture", Tool.ConvertToByteArray(temperComputeCalc.LocalCellsList));
 
 		// temperComputeCalc.UpdateCompute();

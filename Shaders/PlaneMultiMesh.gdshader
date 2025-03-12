@@ -46,6 +46,8 @@ void vertex() {
 
     vec4 color = hsv2rgb(vec4(hue, 0.64, 1.0, 1.0));
     COLOR = color;
+
+
 }
 
 void fragment() {

@@ -167,6 +167,8 @@ public class ComputeShaderInstance
 
 			uniforms[set][binding] = rdUniform;
 			uniforms[set][binding].AddId(buffer.Value);
+
+			// Print("uniforms: ", string.Join(",", uniforms));
 		}
 
 		foreach (var kvp in uniforms)
@@ -178,6 +180,7 @@ public class ComputeShaderInstance
 			);
 
 			UniformSet[setKey] = RD.UniformSetCreate(uniformArray, ComputeShader, setKey);
+			// Print(UniformSet[setKey]);
 		}
 
 	}
@@ -217,6 +220,11 @@ public class ComputeShaderInstance
 	{
 		return Buffers[(set, binding)];
 	}
+
+	// public Rid GetBufferRid(uint set, int binding)
+	// {
+	// 	return UniformSet[(set, binding)];
+	// }
 
 }
 

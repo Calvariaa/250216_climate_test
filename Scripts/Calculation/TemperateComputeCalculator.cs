@@ -14,7 +14,7 @@ public class TemperatureComputeCalculator
 	public float[] LocalCellsList;
 	// private uint[] LocalCellsNeighborsList;
 
-	public Rid LocalCellsTextureIn, LocalCellsTextureOut;
+	private Rid LocalCellsTextureIn, LocalCellsTextureOut;
 	private Vector4I[] LocalCellsNeighborsVector;
 	private float LocalDeltaTime;
 
@@ -50,10 +50,16 @@ public class TemperatureComputeCalculator
 		computeShaderInstance.SetTextureUniform(LocalCellsTextureOut, 1, 0);
 		computeShaderInstance.SetBuffer(LocalCellsNeighborsVector, 0, 1);
 		computeShaderInstance.SetBuffer(LocalDeltaTime, 0, 2);
+		computeShaderInstance.SetBuffer(LocalCellsList, 0, 3);
 
 		computeShaderInstance.SetPushConstant((uint)Length, (float)Alpha);
 
 		computeShaderInstance.InitializeComplete();
+
+
+
+		Print("LocalCellsTextureIn: ", string.Join(", ", (computeShaderInstance.GetBufferRid(0,0))));
+		Print("LocalCellsTextureOut: ", string.Join(", ", (computeShaderInstance.GetBufferRid(1,0))));
 	}
 
 	public Rid NewTextureRid()
@@ -72,13 +78,14 @@ public class TemperatureComputeCalculator
 
 		var textureRid = computeShaderInstance.RD.TextureCreate(tf, new RDTextureView(), []);
 
+		computeShaderInstance.RD.TextureClear(textureRid, new Color(0, 0, 0, 0), 0, 1, 0, 1);
+
 		var textureUpdateState = computeShaderInstance.RD.TextureUpdate(textureRid, 0, Tool.ConvertToByteArray(LocalCellsList));
 
-		Print("textureUpdateState: ", string.Join(", ", (textureRid,textureUpdateState)));
+		Print("textureUpdateState: ", string.Join(", ", (textureRid, textureUpdateState)));
 
 
 		// Make sure our textures are cleared.
-		// computeShaderInstance.RD.TextureClear(textureRid, new Color(0, 0, 0, 0), 0, 1, 0, 1);
 
 		return textureRid;
 	}
@@ -204,10 +211,11 @@ public class TemperatureComputeCalculator
 
 		// computeShaderInstance.UpdateBuffer(0, LocalCellsList);
 		// computeShaderInstance.UpdateBuffer(2, LocalDeltaTime);
-		// computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
+		computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
 
-		float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(1, 0);
-		Print("Output: ", string.Join(",", computeShaderResultArray));
+		float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0, 3);
+		// Print("Output: ", string.Join(",", computeShaderResultArray));
+
 		// foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		// {
 		// 	for (int i = 0; i < Length; i++)

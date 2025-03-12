@@ -22,11 +22,12 @@ func _unhandled_input(_event: InputEvent) -> void:
 var mouse_pos: Vector2
 var mouse_move_flag: bool = false
 var mouse_rotate_flag: bool = false
-var mouse_move_sensitivity: float = 0.001
-var mouse_rotation_sensitivity: float = 0.002
-var mouse_zoom_sensitivity: float = 0.05
+var mouse_move_sensitivity: float = 0.1
+var mouse_rotation_sensitivity: float = 0.2
+var mouse_zoom_sensitivity: float = 0.2
 func _update_camera(event: InputEvent) -> void:
-	var distance_to_origin = camera.global_transform.origin.length()
+	# var distance_to_origin = camera.global_transform.origin.length()
+	var distance_to_origin = 1
 	# 平移：按住shift和鼠标中键
 	if not mouse_rotate_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) and Input.is_key_pressed(KEY_SHIFT):
 		if not mouse_move_flag:
