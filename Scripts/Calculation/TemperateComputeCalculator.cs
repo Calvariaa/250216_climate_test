@@ -214,7 +214,7 @@ public class TemperatureComputeCalculator
 		computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
 
 		float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0, 3);
-		// Print("Output: ", string.Join(",", computeShaderResultArray));
+		Print("Output: ", string.Join(",", computeShaderResultArray));
 
 		// foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		// {
