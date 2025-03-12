@@ -23,10 +23,10 @@ vec4 hsv2rgb(vec4 c) {
 void vertex() {
     // Called for every vertex the material is visible on.
 
-    uint id = uint(INSTANCE_CUSTOM.x)
+    uint id = uint(INSTANCE_CUSTOM.x);
 
     // float clampedTemp = clamp(INSTANCE_CUSTOM.x , -120.0, 120.0);
-    float clampedTemp = clamp(temperature_data[id] , -120.0, 120.0);
+    float clampedTemp = clamp(temperature_data[id], -120.0, 120.0);
     //float clampedTemp = clamp(float(int(INSTANCE_CUSTOM.x) % 120) , -120.0, 120.0);
     float hue;
 
