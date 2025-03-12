@@ -15,14 +15,6 @@ layout(set=0,binding=3,std430)restrict buffer DeltaTime{
     float timestamp;
 }delta_time;
 
-// layout(set=0,binding=4,std430)buffer readonly Alpha{
-//     float data;
-// }global_alpha;
-
-// layout(set=0,binding=5,std430)buffer readonly FaceLength{
-//     uint data;
-// }face_length;
-
 layout(push_constant, std430) uniform Params {
     int face_length;
     float global_alpha;
