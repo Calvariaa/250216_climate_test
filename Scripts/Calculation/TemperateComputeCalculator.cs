@@ -52,7 +52,8 @@ public class TemperatureComputeCalculator
 		computeShaderInstance.SetBuffer(LocalDeltaTime, 0, 2);
 		computeShaderInstance.SetBuffer(LocalCellsList, 0, 3);
 
-		computeShaderInstance.SetPushConstant((uint)Length, (float)Alpha);
+		computeShaderInstance.SetPushConstant((int)Length);
+		computeShaderInstance.SetPushConstant((float)Alpha);
 
 		computeShaderInstance.InitializeComplete();
 

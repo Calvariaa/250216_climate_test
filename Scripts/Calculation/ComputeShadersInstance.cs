@@ -99,21 +99,18 @@ public class ComputeShaderInstance
 	public void SetPushConstant<T>(params T[] objects) where T : unmanaged
 	{
 		byte[] bytes = Tool.ConvertToByteArray(objects);
-		if (bytes.Length >= 16 && bytes.Length <= 128)
+		if (bytes.Length > 0 && bytes.Length <= 128)
 		{
-			PushConstant = bytes;
-		}
-		else if (bytes.Length > 0 && bytes.Length < 16)
-		{
-			byte[] completion = new byte[16];
-			for (var i = 0; i < completion.Length; i++)
+			var len = bytes.Length / 4 < 4 ? 4 : bytes.Length / 4;
+			byte[] completion = new byte[len];
+			for (var i = 0; i < len; i++)
 			{
 				if (i < bytes.Length)
 					completion[i] = bytes[i];
 				else
 					completion[i] = 0;
 			}
-			PushConstant = completion;
+			PushConstant = PushConstant.Concat(completion).ToArray();
 		}
 		else
 			Print($"ComputeShaderInstance/SetPushConstant:那你输进来的东西超过推式常量的限制,到底输入的是个啥呢: {objects} 还有转换后的东西: {bytes}");
@@ -200,7 +197,22 @@ public class ComputeShaderInstance
 			RD.ComputeListBindUniformSet(computeList, item.Value, item.Key);
 
 		if (PushConstant.Length > 0)
-			RD.ComputeListSetPushConstant(computeList, PushConstant, (uint)PushConstant.Length);
+		{
+			if (PushConstant.Length > 0 && PushConstant.Length <= 128)
+			{
+				byte[] completion = new byte[16];
+				for (var i = 0; i < 16; i++)
+				{
+					if (i < PushConstant.Length)
+						completion[i] = PushConstant[i];
+					else
+						completion[i] = 0;
+				}
+				PushConstant = completion;
+			}
+
+			RD.ComputeListSetPushConstant(computeList, PushConstant, 16);
+		}
 
 		RD.ComputeListDispatch(computeList, GroupSizeX, GroupSizeY, GroupSizeZ);
 		RD.ComputeListEnd();

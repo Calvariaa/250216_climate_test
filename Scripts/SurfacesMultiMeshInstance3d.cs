@@ -46,6 +46,8 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		cells = new SurfaceAreaCells(Length);
 
+		// localShaderMaterial = Position with { X = 100.0f };	
+
 		localShaderMaterial = this.MaterialOverride as ShaderMaterial;
 
 		// TemperatureTexture = (Texture2Drd)localShaderMaterial.GetShaderParameter("temperature_texture");
