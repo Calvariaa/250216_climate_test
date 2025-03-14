@@ -2,6 +2,7 @@ shader_type spatial;
 
 uniform uint cell_length;
 uniform sampler2D temperature_texture;
+uniform float temperature_test = 0.0f;
 
 uvec2 id_to_uv(uint id) {
     uint face_size = cell_length;
@@ -32,6 +33,8 @@ void vertex() {
 
     // Sample the temperature from the texture
     float temperature = texture(temperature_texture, normalized_uv).r;
+    // float temperature = float(id % (255u));
+    // temperature_test = temperature;
 
     // Clamp the temperature to the desired range
     float clampedTemp = clamp(temperature, -120.0, 120.0);

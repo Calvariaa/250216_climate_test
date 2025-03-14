@@ -1,13 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://bba0cjfoheye"]
+[gd_scene load_steps=8 format=3 uid="uid://bba0cjfoheye"]
 
 [ext_resource type="Script" uid="uid://cguifpylnb1u0" path="res://Scripts/camera_node_3d.gd" id="1_na5q0"]
 [ext_resource type="Shader" uid="uid://d3vdyni4b2du" path="res://Shaders/PlaneMultiMesh.gdshader" id="2_k3lqd"]
 [ext_resource type="Script" uid="uid://dniydk6c8x7gn" path="res://Scripts/SurfacesMultiMeshInstance3d.cs" id="3_8nwxo"]
 
+[sub_resource type="Texture2DRD" id="Texture2DRD_8nwxo"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8nwxo"]
 render_priority = 0
 shader = ExtResource("2_k3lqd")
 shader_parameter/cell_length = 0
+shader_parameter/temperature_texture = SubResource("Texture2DRD_8nwxo")
+shader_parameter/temperature_test = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5youu"]
 
@@ -31,8 +35,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 25)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="CameraY/CameraX/Camera3D"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
-spot_range = 1868.73
+spot_range = 2000.0
 spot_attenuation = 0.0
+spot_angle = 90.0
 
 [node name="SurfacesMultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
 material_override = SubResource("ShaderMaterial_8nwxo")

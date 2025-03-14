@@ -14,7 +14,7 @@ public class TemperatureComputeCalculator
 	public float[] LocalCellsList;
 	// private uint[] LocalCellsNeighborsList;
 
-	private Rid LocalCellsTextureIn, LocalCellsTextureOut;
+	public Rid LocalCellsTextureIn, LocalCellsTextureOut;
 	private Vector4I[] LocalCellsNeighborsVector;
 	private float LocalDeltaTime;
 
@@ -24,7 +24,9 @@ public class TemperatureComputeCalculator
 
 	public SurfaceAreaCells AreaCells;
 
-	public TemperatureComputeCalculator(string path, uint length, double alpha, SurfaceAreaCells surfaceAreaCells)
+	private Texture2Drd texture;
+
+	public TemperatureComputeCalculator(string path, ShaderMaterial materialShader, uint length, double alpha, SurfaceAreaCells surfaceAreaCells)
 	{
 		Length = length;
 		Alpha = alpha;
@@ -41,8 +43,8 @@ public class TemperatureComputeCalculator
 
 		computeShaderInstance = new(path);
 
-
-		// texture.TextureRdRid = textureRid;
+		texture = (Texture2Drd)materialShader.GetShaderParameter("temperature_texture");
+		texture.TextureRdRid = LocalCellsTextureOut;
 
 		LocalCellsTextureIn = NewTextureRid();
 		LocalCellsTextureOut = NewTextureRid();
@@ -59,8 +61,8 @@ public class TemperatureComputeCalculator
 
 
 
-		Print("LocalCellsTextureIn: ", string.Join(", ", (computeShaderInstance.GetBufferRid(0,0))));
-		Print("LocalCellsTextureOut: ", string.Join(", ", (computeShaderInstance.GetBufferRid(1,0))));
+		Print("LocalCellsTextureIn: ", string.Join(", ", (computeShaderInstance.GetBufferRid(0, 0))));
+		Print("LocalCellsTextureOut: ", string.Join(", ", (computeShaderInstance.GetBufferRid(1, 0))));
 	}
 
 	public Rid NewTextureRid()
@@ -195,37 +197,15 @@ public class TemperatureComputeCalculator
 
 	public void Calculate(double delta)
 	{
-		// LocalDeltaTime = (float)delta;
-
-		// // (int)orientation * Length * Length + i * Length + j
-		// foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
-		// {
-		// 	for (int i = 0; i < Length; i++)
-		// 	{
-		// 		for (int j = 0; j < Length; j++)
-		// 		{
-		// 			LocalCellsList[(int)orientation * Length * Length + i * Length + j] = AreaCells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature;
-
-		// 		}
-		// 	}
-		// }
-
-		// computeShaderInstance.UpdateBuffer(0, LocalCellsList);
-		// computeShaderInstance.UpdateBuffer(2, LocalDeltaTime);
 		computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
 
-		float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0, 3);
-		Print("Output: ", string.Join(",", computeShaderResultArray));
+		// float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0, 3);
+		// Print("Output: ", string.Join(",", computeShaderResultArray));
 
-		// foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
+		// if (texture != null)
 		// {
-		// 	for (int i = 0; i < Length; i++)
-		// 	{
-		// 		for (int j = 0; j < Length; j++)
-		// 		{
-		// 			AreaCells.surfaceCellNodes[orientation].Surface.Cell(i, j, 0).Temperature = computeShaderResultArray[(int)orientation * Length * Length + i * Length + j];
-		// 		}
-		// 	}
+		// 	Print("texture: ", texture);
+		// 	texture.TextureRdRid = LocalCellsTextureOut;
 		// }
 	}
 

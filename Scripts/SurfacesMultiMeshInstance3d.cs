@@ -48,15 +48,17 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		// localShaderMaterial = Position with { X = 100.0f };	
 
-		localShaderMaterial = this.MaterialOverride as ShaderMaterial;
+		// localShaderMaterial = this.MaterialOverride as ShaderMaterial;
+		localShaderMaterial = this.MaterialOverride.Duplicate() as ShaderMaterial;
 
 		// TemperatureTexture = (Texture2Drd)localShaderMaterial.GetShaderParameter("temperature_texture");
 		localShaderMaterial.SetShaderParameter("cell_length", (uint)Length);
+		// localShaderMaterial.SetShaderParameter("temperature_test", 3.0f);
 
 
-		// Print(localShaderMaterial.GetShaderParameter("temperature_texture"));
+		Print(localShaderMaterial.GetShaderParameter("temperature_texture"));
 
-		temperComputeCalc = new TemperatureComputeCalculator(ComputePath, Length, Alpha, cells);
+		temperComputeCalc = new TemperatureComputeCalculator(ComputePath, localShaderMaterial, Length, Alpha, cells);
 
 		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
@@ -73,6 +75,8 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 			}
 		}
 
+		this.MaterialOverride = localShaderMaterial;
+
 		MapCellsToCube();
 	}
 
@@ -83,7 +87,7 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 		temperComputeCalc.computeShaderInstance.UpdateBuffer((float)delta, 0, 2);
 
 		localShaderMaterial.SetShaderParameter("temperature_texture", temperComputeCalc.computeShaderInstance.GetBufferRid(1u, 0));
-		// localShaderMaterial.SetShaderParameter("temperature_texture", Tool.ConvertToByteArray(temperComputeCalc.LocalCellsList));
+		localShaderMaterial.SetShaderParameter("temperature_test", 90.0f);
 
 		// temperComputeCalc.UpdateCompute();
 
@@ -91,6 +95,12 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		temperComputeCalc.Calculate(delta);
 
+		// var getShaderParamTemp = (Rid)localShaderMaterial.GetShaderParameter("temperature_texture");
+		// var outputBytes = temperComputeCalc.computeShaderInstance.RD.BufferGetData(getShaderParamTemp);
+		// Print("Output: ", string.Join(", ", outputBytes));
+		// Print();
+
+		// Print(localShaderMaterial.GetShaderParameter("temperature_texture"));
 	}
 
 	private void MapCellsToCube()

@@ -228,6 +228,12 @@ public class ComputeShaderInstance
 		return result;
 	}
 
+	public byte[] GetTexture2DrdBytes(uint set, int binding)
+	{
+		var outputBytes = RD.BufferGetData(Buffers[(set, binding)]);
+		return outputBytes;
+	}
+
 	public Rid GetBufferRid(uint set, int binding)
 	{
 		return Buffers[(set, binding)];
