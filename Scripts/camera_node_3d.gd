@@ -29,7 +29,7 @@ func _update_camera(event: InputEvent) -> void:
 	# var distance_to_origin = camera.global_transform.origin.length()
 	var distance_to_origin = 1
 	# 平移：按住shift和鼠标中键
-	if not mouse_rotate_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE) and Input.is_key_pressed(KEY_SHIFT):
+	if not mouse_rotate_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_key_pressed(KEY_SHIFT):
 		if not mouse_move_flag:
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			mouse_pos = get_viewport().get_mouse_position()
@@ -43,14 +43,14 @@ func _update_camera(event: InputEvent) -> void:
 
 			# Apply camera translation
 			camera.translate(Vector3(-displacement.x * mouse_move_sensitivity * distance_to_origin, displacement.y * mouse_move_sensitivity * distance_to_origin, 0))
-		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			Input.warp_mouse(mouse_pos)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			mouse_move_flag = false
 
 	# 旋转：按住鼠标中键
-	if not mouse_move_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+	if not mouse_move_flag and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		if not mouse_rotate_flag:
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			mouse_pos = get_viewport().get_mouse_position()
@@ -65,10 +65,10 @@ func _update_camera(event: InputEvent) -> void:
 			# rotate(Vector3(1, 0, 0), deg_to_rad(displacement.y * mouse_rotation_sensitivity))
 			# rotate(Vector3(0, 1, 0), deg_to_rad(-displacement.x * mouse_rotation_sensitivity))
 
-			if abs(node.rotation.x - 1e-6) < PI / 2 or node.rotation.x * displacement.y > 0:
+			if abs(node.rotation.x - (1e-6)) < PI / 2 or node.rotation.x * displacement.y > 0:
 				node.rotate_x(deg_to_rad(-displacement.y * mouse_rotation_sensitivity * distance_to_origin));
 			rotate_y(deg_to_rad(-displacement.x * mouse_rotation_sensitivity * distance_to_origin));
-		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED_HIDDEN
 			Input.warp_mouse(mouse_pos)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
