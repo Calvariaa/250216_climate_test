@@ -216,8 +216,8 @@ public class ComputeShaderInstance
 
 		RD.ComputeListDispatch(computeList, GroupSizeX, GroupSizeY, GroupSizeZ);
 		RD.ComputeListEnd();
-		RD.Submit();
-		RD.Sync();
+		// RD.Submit();
+		// RD.Sync();
 	}
 
 	public float[] GetFloatArrayResult(uint set, int binding)

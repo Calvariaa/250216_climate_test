@@ -11,7 +11,6 @@ render_priority = 0
 shader = ExtResource("2_k3lqd")
 shader_parameter/cell_length = 0
 shader_parameter/temperature_texture = SubResource("Texture2DRD_8nwxo")
-shader_parameter/temperature_test = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5youu"]
 
