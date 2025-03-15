@@ -1,5 +1,7 @@
 shader_type spatial;
 
+#include "debug_number.gdshaderinc"
+
 uniform uint cell_length;
 uniform sampler2D temperature_texture;
 //uniform float temperature_test = 0.0f;

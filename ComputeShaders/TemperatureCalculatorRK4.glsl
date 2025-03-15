@@ -107,6 +107,6 @@ void main(){
     
     float final_temp=T0+dt*(k1+2.*k2+2.*k3+k4)/6.;
     
-    temp_test.data[id]=float(const_param.face_length);
+    temp_test.data[id]=final_temp;
     imageStore(temperature_writeonly,ivec2(self_uv),vec4(final_temp,0,0,0));
 }
