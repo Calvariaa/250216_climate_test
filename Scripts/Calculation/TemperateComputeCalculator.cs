@@ -14,7 +14,7 @@ public class TemperatureComputeCalculator
 	public float[] LocalCellsList;
 	// private uint[] LocalCellsNeighborsList;
 
-	public Rid LocalCellsTextureIn, LocalCellsTextureOut;
+	public Rid LocalCellsTexture;
 	private Vector4I[] LocalCellsNeighborsVector;
 	private float LocalDeltaTime;
 
@@ -32,7 +32,6 @@ public class TemperatureComputeCalculator
 		Alpha = alpha;
 		AreaCells = surfaceAreaCells;
 		LocalCellsList = new float[length * length * 6];
-		// LocalCellsNeighborsList = new uint[length * length * 6 * 4];
 		LocalCellsNeighborsVector = new Vector4I[length * length * 6];
 		LocalDeltaTime = 0.0f;
 
@@ -44,13 +43,10 @@ public class TemperatureComputeCalculator
 		computeShaderInstance = new(path);
 
 		texture = (Texture2Drd)materialShader.GetShaderParameter("temperature_texture");
-		// texture.TextureRdRid = LocalCellsTextureOut;
 
-		LocalCellsTextureIn = NewTextureRid();
-		texture.TextureRdRid = LocalCellsTextureIn;
-		// LocalCellsTextureOut = NewTextureRid();
-		computeShaderInstance.SetTextureUniform(LocalCellsTextureIn, 0, 0);
-		// computeShaderInstance.SetTextureUniform(LocalCellsTextureOut, 1, 0);
+		LocalCellsTexture = NewTextureRid();
+		texture.TextureRdRid = LocalCellsTexture;
+		computeShaderInstance.SetTextureUniform(LocalCellsTexture, 0, 0);
 		computeShaderInstance.SetBuffer(LocalCellsNeighborsVector, 0, 1);
 		computeShaderInstance.SetBuffer(LocalDeltaTime, 0, 2);
 		// computeShaderInstance.SetBuffer(LocalCellsList, 0, 3);
@@ -62,7 +58,7 @@ public class TemperatureComputeCalculator
 
 
 
-		Print("LocalCellsTextureIn: ", string.Join(", ", computeShaderInstance.GetBufferRid(0, 0)));
+		Print("LocalCellsTexture: ", string.Join(", ", computeShaderInstance.GetBufferRid(0, 0)));
 		// Print("LocalCellsTextureOut: ", string.Join(", ", computeShaderInstance.GetBufferRid(1, 0)));
 	}
 
@@ -86,16 +82,10 @@ public class TemperatureComputeCalculator
 		};
 
 		Print("tf.UsageBits: ", string.Join(", ", tf.UsageBits));
-
-
 		var textureRid = computeShaderInstance.RD.TextureCreate(tf, new RDTextureView(), []);
-
 		// computeShaderInstance.RD.TextureClear(textureRid, new Color(0, 0, 0, 0), 0, 1, 0, 1);
-
 		var textureUpdateState = computeShaderInstance.RD.TextureUpdate(textureRid, 0, Tool.ConvertToByteArray(LocalCellsList));
-
 		Print("textureUpdateState: ", string.Join(", ", (textureRid, textureUpdateState)));
-
 		return textureRid;
 	}
 
@@ -203,16 +193,13 @@ public class TemperatureComputeCalculator
 
 	public void Calculate(double delta)
 	{
+		computeShaderInstance.UpdateBuffer((float)delta, 0, 2);
 		if (texture != null)
 		{
 			// Print("texture: ", texture);
-			texture.TextureRdRid = LocalCellsTextureIn;
+			texture.TextureRdRid = LocalCellsTexture;
 		}
 		computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
-
-		// float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0, 3);
-		// Print("Output: ", string.Join(",", computeShaderResultArray));
-
 	}
 
 

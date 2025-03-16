@@ -4,8 +4,7 @@
 
 layout(local_size_x=32,local_size_y=32,local_size_z=1)in;
 
-layout(set=0,binding=0,r32f)uniform restrict image2D temperature_readonly;
-// layout(set=1,binding=0,r32f)uniform restrict writeonly image2D temperature_writeonly;
+layout(set=0,binding=0,r32f)uniform restrict image2D temperature;
 
 layout(set=0,binding=1,std430)restrict readonly buffer NeighborIndex{
     uvec4 data[];
@@ -16,7 +15,7 @@ layout(set=0,binding=2,std430)restrict buffer DeltaTime{
 }delta_time;
 
 // layout(set=0,binding=3,std430)restrict buffer TemperatureTest{
-//     float data[];
+    //     float data[];
 // }temp_test;
 
 layout(push_constant,std430)uniform Params{
@@ -24,7 +23,8 @@ layout(push_constant,std430)uniform Params{
     float global_alpha;
 }const_param;
 
-float dx2_inv=(const_param.face_length-1)<<1;
+// 节点间距 dx = 0.0025
+float dx2_inv=float(400<<1);
 
 // id to texture uv
 uvec2 id_to_uv(uint id){
@@ -43,6 +43,8 @@ float computeHeatEquation(uint id,float temp_self,float temp_left,float temp_rig
     return const_param.global_alpha*(d2x+d2y);
 }
 
+// https://i.imgur.com/RIlJM32.png
+// https://zhuanlan.zhihu.com/p/8616433050
 void main(){
     uint x=gl_GlobalInvocationID.x;
     uint y=gl_GlobalInvocationID.y;
@@ -54,7 +56,7 @@ void main(){
     (gl_NumWorkGroups.y*gl_WorkGroupSize.y);
     
     // if(id>=const_param.face_length*const_param.face_length*6){
-    //     return;
+        //     return;
     // }
     
     float dt=delta_time.timestamp;
@@ -68,7 +70,7 @@ void main(){
     
     // get id for texture
     uvec2 self_uv=id_to_uv(id);
-    float T0=imageLoad(temperature_readonly,ivec2(self_uv)).r;
+    float T0=imageLoad(temperature,ivec2(self_uv)).r;
     
     // neighbors
     uvec2 left_uv=id_to_uv(left);
@@ -76,38 +78,38 @@ void main(){
     uvec2 bottom_uv=id_to_uv(bottom);
     uvec2 top_uv=id_to_uv(top);
     
-    float temp_left=imageLoad(temperature_readonly,ivec2(left_uv)).r;
-    float temp_right=imageLoad(temperature_readonly,ivec2(right_uv)).r;
-    float temp_bottom=imageLoad(temperature_readonly,ivec2(bottom_uv)).r;
-    float temp_top=imageLoad(temperature_readonly,ivec2(top_uv)).r;
+    float temp_left=imageLoad(temperature,ivec2(left_uv)).r;
+    float temp_right=imageLoad(temperature,ivec2(right_uv)).r;
+    float temp_bottom=imageLoad(temperature,ivec2(bottom_uv)).r;
+    float temp_top=imageLoad(temperature,ivec2(top_uv)).r;
     
     // RK4
     float k1=computeHeatEquation(id,T0,temp_left,temp_right,temp_bottom,temp_top);
     
     float T_k2=T0+.5*dt*k1;
-    float k2_temp_left=imageLoad(temperature_readonly,ivec2(left_uv)).r+.5*dt*k1;
-    float k2_temp_right=imageLoad(temperature_readonly,ivec2(right_uv)).r+.5*dt*k1;
-    float k2_temp_bottom=imageLoad(temperature_readonly,ivec2(bottom_uv)).r+.5*dt*k1;
-    float k2_temp_top=imageLoad(temperature_readonly,ivec2(top_uv)).r+.5*dt*k1;
+    float k2_temp_left=imageLoad(temperature,ivec2(left_uv)).r+.5*dt*k1;
+    float k2_temp_right=imageLoad(temperature,ivec2(right_uv)).r+.5*dt*k1;
+    float k2_temp_bottom=imageLoad(temperature,ivec2(bottom_uv)).r+.5*dt*k1;
+    float k2_temp_top=imageLoad(temperature,ivec2(top_uv)).r+.5*dt*k1;
     float k2=computeHeatEquation(id,T_k2,k2_temp_left,k2_temp_right,k2_temp_bottom,k2_temp_top);
     
     float T_k3=T0+.5*dt*k2;
-    float k3_temp_left=imageLoad(temperature_readonly,ivec2(left_uv)).r+.5*dt*k2;
-    float k3_temp_right=imageLoad(temperature_readonly,ivec2(right_uv)).r+.5*dt*k2;
-    float k3_temp_bottom=imageLoad(temperature_readonly,ivec2(bottom_uv)).r+.5*dt*k2;
-    float k3_temp_top=imageLoad(temperature_readonly,ivec2(top_uv)).r+.5*dt*k2;
+    float k3_temp_left=imageLoad(temperature,ivec2(left_uv)).r+.5*dt*k2;
+    float k3_temp_right=imageLoad(temperature,ivec2(right_uv)).r+.5*dt*k2;
+    float k3_temp_bottom=imageLoad(temperature,ivec2(bottom_uv)).r+.5*dt*k2;
+    float k3_temp_top=imageLoad(temperature,ivec2(top_uv)).r+.5*dt*k2;
     float k3=computeHeatEquation(id,T_k3,k3_temp_left,k3_temp_right,k3_temp_bottom,k3_temp_top);
     
     float T_k4=T0+dt*k3;
-    float k4_temp_left=imageLoad(temperature_readonly,ivec2(left_uv)).r+dt*k3;
-    float k4_temp_right=imageLoad(temperature_readonly,ivec2(right_uv)).r+dt*k3;
-    float k4_temp_bottom=imageLoad(temperature_readonly,ivec2(bottom_uv)).r+dt*k3;
-    float k4_temp_top=imageLoad(temperature_readonly,ivec2(top_uv)).r+dt*k3;
+    float k4_temp_left=imageLoad(temperature,ivec2(left_uv)).r+dt*k3;
+    float k4_temp_right=imageLoad(temperature,ivec2(right_uv)).r+dt*k3;
+    float k4_temp_bottom=imageLoad(temperature,ivec2(bottom_uv)).r+dt*k3;
+    float k4_temp_top=imageLoad(temperature,ivec2(top_uv)).r+dt*k3;
     float k4=computeHeatEquation(id,T_k4,k4_temp_left,k4_temp_right,k4_temp_bottom,k4_temp_top);
     
     float final_temp=T0+dt*(k1+2.*k2+2.*k3+k4)/6.;
     
-    imageStore(temperature_readonly,ivec2(self_uv),vec4(final_temp,final_temp,final_temp,1.0));
-
-    // temp_test.data[id]=imageLoad(temperature_readonly,ivec2(self_uv)).r;
+    imageStore(temperature,ivec2(self_uv),vec4(final_temp,final_temp,final_temp,1.));
+    
+    // temp_test.data[id]=imageLoad(temperature,ivec2(self_uv)).r;
 }
