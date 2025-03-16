@@ -6,6 +6,9 @@ uniform uint cell_length;
 uniform sampler2D temperature_texture : filter_nearest;
 //uniform float temperature_test = 0.0f;
 
+uniform float radius = 1;
+uniform float line_width = 1; // 控制线段的宽度
+
 uvec2 id_to_uv(uint id) {
     // 32 * 32 * 6 = 6144
 
@@ -37,11 +40,11 @@ void vertex() {
     uint id = uint(INSTANCE_CUSTOM.x);
 
     // Convert the ID to UV coordinates
-    uvec2 uv = id_to_uv(id);
+    uvec2 texture_uv = id_to_uv(id);
 
     // Normalize UV coordinates to [0, 1] range
     // vec2 normalized_uv = vec2(uv) / float(cell_length * 6u);
-    vec2 normalized_uv = vec2(uv) / vec2(float(cell_length) * 6.f, float(cell_length));
+    vec2 normalized_uv = vec2(texture_uv) / vec2(float(cell_length) * 6.f, float(cell_length));
 
     // Sample the temperature from the texture
     float temperature = texture(temperature_texture, normalized_uv).r;
@@ -65,7 +68,18 @@ void vertex() {
     COLOR = color;
     // COLOR = texture(temperature_texture, UV).rgba
 
-
+    // Set Sphere VERTEX position
+	vec3 absolute_direction = NODE_POSITION_WORLD;
+    vec2 position_uv = UV;
+    //float t = position_uv.x * TAU;
+    //float p = position_uv.y * PI;
+//
+    //float x = radius * sin(p) * cos(t);
+    //float y = radius * cos(p);
+    //float z = radius * sin(p) * sin(t);
+//
+    //VERTEX = vec3(x, y, z);
+    //NORMAL = normalize(VERTEX);
 }
 
 void fragment() {

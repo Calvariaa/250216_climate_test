@@ -33,8 +33,9 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		Multimesh.UseCustomData = true;
 
-		var PlaneMesh = new PlaneMesh();
-		PlaneMesh.Size = new Vector2(1.0f, 1.0f);
+		//var PlaneMesh = new PlaneMesh();
+		var PlaneMesh = new PointMesh();
+		//PlaneMesh.Size = new Vector2(1.0f, 1.0f);
 		PlaneMesh.Material = Material;
 
 		Multimesh.Mesh = PlaneMesh;

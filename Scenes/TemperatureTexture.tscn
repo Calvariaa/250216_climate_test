@@ -24,13 +24,13 @@ render_priority = 0
 shader = ExtResource("2_k3lqd")
 shader_parameter/cell_length = 0
 shader_parameter/temperature_texture = SubResource("Texture2DRD_8nwxo")
+shader_parameter/radius = 100.0
+shader_parameter/line_width = 0.02
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_5youu"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5youu"]
 
-[sub_resource type="MultiMesh" id="MultiMesh_wi0ka"]
-transform_format = 1
-custom_aabb = AABB(-0.5, 0, -0.5, 1, 0, 1)
-mesh = SubResource("PlaneMesh_5youu")
+[sub_resource type="PointMesh" id="PointMesh_wi0ka"]
+material = SubResource("StandardMaterial3D_5youu")
 
 [node name="Node3D" type="Node3D"]
 
@@ -57,7 +57,10 @@ skeleton = NodePath("../../../..")
 
 [node name="SurfacesMultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
 material_override = SubResource("ShaderMaterial_8nwxo")
-multimesh = SubResource("MultiMesh_wi0ka")
 script = ExtResource("3_8nwxo")
 ComputePath = "res://ComputeShaders/TemperatureCalculatorRK4.glsl"
-Length = 1024
+Length = 128
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+mesh = SubResource("PointMesh_wi0ka")
