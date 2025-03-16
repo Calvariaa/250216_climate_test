@@ -33,9 +33,9 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 
 		Multimesh.UseCustomData = true;
 
-		//var PlaneMesh = new PlaneMesh();
-		var PlaneMesh = new PointMesh();
-		//PlaneMesh.Size = new Vector2(1.0f, 1.0f);
+		var PlaneMesh = new PlaneMesh();
+		// var PlaneMesh = new PointMesh();
+		PlaneMesh.Size = new Vector2(1.0f, 1.0f);
 		PlaneMesh.Material = Material;
 
 		Multimesh.Mesh = PlaneMesh;
@@ -63,7 +63,7 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 					// 所以x==0是左，y==0是上
 
 					var id = (int)orientation * (int)Length * (int)Length + i * (int)Length + j;
-					Multimesh.SetInstanceCustomData(id, new Color((uint)id, (uint)Length, 0, 0));
+					Multimesh.SetInstanceCustomData(id, new Color((uint)Length, (uint)orientation, (uint)i, (uint)j));
 				}
 			}
 		}

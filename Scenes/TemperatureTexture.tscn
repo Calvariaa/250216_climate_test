@@ -59,7 +59,7 @@ skeleton = NodePath("../../../..")
 material_override = SubResource("ShaderMaterial_8nwxo")
 script = ExtResource("3_8nwxo")
 ComputePath = "res://ComputeShaders/TemperatureCalculatorRK4.glsl"
-Length = 128
+Length = 1024
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)

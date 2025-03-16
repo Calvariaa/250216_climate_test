@@ -36,8 +36,13 @@ vec4 hsv2rgb(vec4 c) {
 
 void vertex() {
     // Called for every vertex the material is visible on.
+    // INSTANCE_CUSTOM.y*INSTANCE_CUSTOM.z*INSTANCE_CUSTOM.w
 
-    uint id = uint(INSTANCE_CUSTOM.x);
+    uint node_length = uint(INSTANCE_CUSTOM.x);
+    uint node_orien = uint(INSTANCE_CUSTOM.y);
+    uint node_x = uint(INSTANCE_CUSTOM.z);
+    uint node_y = uint(INSTANCE_CUSTOM.w);
+    uint id = uint(node_orien * node_length * node_length + node_x * node_length + node_y);
 
     // Convert the ID to UV coordinates
     uvec2 texture_uv = id_to_uv(id);
