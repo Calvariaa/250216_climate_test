@@ -3,7 +3,7 @@ shader_type spatial;
 #include "debug_number.gdshaderinc"
 
 uniform uint cell_length;
-uniform sampler2D temperature_texture;
+uniform sampler2D temperature_texture : filter_nearest;
 //uniform float temperature_test = 0.0f;
 
 uvec2 id_to_uv(uint id) {
@@ -41,15 +41,17 @@ void vertex() {
 
     // Normalize UV coordinates to [0, 1] range
     // vec2 normalized_uv = vec2(uv) / float(cell_length * 6u);
-    vec2 normalized_uv = vec2(uv) / vec2(float(cell_length) * 6.f,float(cell_length));
+    vec2 normalized_uv = vec2(uv) / vec2(float(cell_length) * 6.f, float(cell_length));
 
     // Sample the temperature from the texture
     float temperature = texture(temperature_texture, normalized_uv).r;
-    // float temperature = float(id % (255u));1
+    // float temperature = texture(temperature_texture, UV).r;
+    //  float temperature = float(id % (120u));
     // temperature_test = temperature;
 
     // Clamp the temperature to the desired range
-    float clampedTemp = clamp(temperature, -120.0, 120.0);
+    //float clampedTemp = clamp(temperature, -120.0, 120.0);
+    float clampedTemp = temperature;
 
     float hue;
 
@@ -61,10 +63,12 @@ void vertex() {
 
     vec4 color = hsv2rgb(vec4(hue, 0.64, 1.0, 1.0));
     COLOR = color;
+    // COLOR = texture(temperature_texture, UV).rgba
 
 
 }
 
 void fragment() {
     ALBEDO = COLOR.rgb;
+    //ALBEDO = texture(temperature_texture, UV).rgb;
 }

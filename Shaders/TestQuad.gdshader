@@ -14,9 +14,9 @@ void vertex() {
 		1.0/200.0, // screen width
 		1.0/200.0 // screen height
 	};
-	 
+
 	int number_index = int(floor(UV.y * float(numbers.length())));
-	
+
 	float number = numbers[number_index];
 	COLOR = am_ndbg_display_float(
 		number,

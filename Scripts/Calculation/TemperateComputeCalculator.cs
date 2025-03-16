@@ -44,15 +44,16 @@ public class TemperatureComputeCalculator
 		computeShaderInstance = new(path);
 
 		texture = (Texture2Drd)materialShader.GetShaderParameter("temperature_texture");
-		texture.TextureRdRid = LocalCellsTextureOut;
+		// texture.TextureRdRid = LocalCellsTextureOut;
 
 		LocalCellsTextureIn = NewTextureRid();
-		LocalCellsTextureOut = NewTextureRid();
+		texture.TextureRdRid = LocalCellsTextureIn;
+		// LocalCellsTextureOut = NewTextureRid();
 		computeShaderInstance.SetTextureUniform(LocalCellsTextureIn, 0, 0);
-		computeShaderInstance.SetTextureUniform(LocalCellsTextureOut, 1, 0);
+		// computeShaderInstance.SetTextureUniform(LocalCellsTextureOut, 1, 0);
 		computeShaderInstance.SetBuffer(LocalCellsNeighborsVector, 0, 1);
 		computeShaderInstance.SetBuffer(LocalDeltaTime, 0, 2);
-		computeShaderInstance.SetBuffer(LocalCellsList, 0, 3);
+		// computeShaderInstance.SetBuffer(LocalCellsList, 0, 3);
 
 		computeShaderInstance.SetPushConstant((int)Length);
 		computeShaderInstance.SetPushConstant((float)Alpha);
@@ -61,8 +62,8 @@ public class TemperatureComputeCalculator
 
 
 
-		Print("LocalCellsTextureIn: ", string.Join(", ", (computeShaderInstance.GetBufferRid(0, 0))));
-		Print("LocalCellsTextureOut: ", string.Join(", ", (computeShaderInstance.GetBufferRid(1, 0))));
+		Print("LocalCellsTextureIn: ", string.Join(", ", computeShaderInstance.GetBufferRid(0, 0)));
+		// Print("LocalCellsTextureOut: ", string.Join(", ", computeShaderInstance.GetBufferRid(1, 0)));
 	}
 
 	public Rid NewTextureRid()
@@ -76,12 +77,20 @@ public class TemperatureComputeCalculator
 			Depth = 1,
 			ArrayLayers = 1,
 			Mipmaps = 1,
-			UsageBits = RenderingDevice.TextureUsageBits.SamplingBit | RenderingDevice.TextureUsageBits.ColorAttachmentBit | RenderingDevice.TextureUsageBits.StorageBit | RenderingDevice.TextureUsageBits.CanUpdateBit | RenderingDevice.TextureUsageBits.CanCopyToBit
+			UsageBits = RenderingDevice.TextureUsageBits.SamplingBit |
+						RenderingDevice.TextureUsageBits.ColorAttachmentBit |
+						RenderingDevice.TextureUsageBits.StorageBit |
+						RenderingDevice.TextureUsageBits.CanUpdateBit |
+						RenderingDevice.TextureUsageBits.CanCopyToBit |
+						RenderingDevice.TextureUsageBits.CanCopyFromBit
 		};
+
+		Print("tf.UsageBits: ", string.Join(", ", tf.UsageBits));
+
 
 		var textureRid = computeShaderInstance.RD.TextureCreate(tf, new RDTextureView(), []);
 
-		computeShaderInstance.RD.TextureClear(textureRid, new Color(0, 0, 0, 0), 0, 1, 0, 1);
+		// computeShaderInstance.RD.TextureClear(textureRid, new Color(0, 0, 0, 0), 0, 1, 0, 1);
 
 		var textureUpdateState = computeShaderInstance.RD.TextureUpdate(textureRid, 0, Tool.ConvertToByteArray(LocalCellsList));
 
@@ -194,21 +203,16 @@ public class TemperatureComputeCalculator
 
 	public void Calculate(double delta)
 	{
+		if (texture != null)
+		{
+			// Print("texture: ", texture);
+			texture.TextureRdRid = LocalCellsTextureIn;
+		}
 		computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
 
 		// float[] computeShaderResultArray = computeShaderInstance.GetFloatArrayResult(0, 3);
 		// Print("Output: ", string.Join(",", computeShaderResultArray));
 
-		// if (texture != null)
-		// {
-		// 	Print("texture: ", texture);
-		// 	texture.TextureRdRid = LocalCellsTextureOut;
-		// }
-	}
-
-	public void UpdateCompute()
-	{
-		computeShaderInstance.Calculate(GroupSize, GroupSize, 6);
 	}
 
 

@@ -55,10 +55,10 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 		localShaderMaterial.SetShaderParameter("cell_length", (uint)Length);
 		// localShaderMaterial.SetShaderParameter("temperature_test", 3.0f);
 
-
-		Print(localShaderMaterial.GetShaderParameter("temperature_texture"));
+		Print("cell_length: ", string.Join(", ", localShaderMaterial.GetShaderParameter("cell_length")));
 
 		temperComputeCalc = new TemperatureComputeCalculator(ComputePath, localShaderMaterial, Length, Alpha, cells);
+
 
 		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
 		{
@@ -75,33 +75,63 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 			}
 		}
 
-		this.MaterialOverride = localShaderMaterial;
+		// this.MaterialOverride = localShaderMaterial;
 
 		MapCellsToCube();
 	}
 
 	public override void _Process(double delta)
 	{
-		// localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetBuffer(0));
-
-		localShaderMaterial.SetShaderParameter("temperature_texture", temperComputeCalc.computeShaderInstance.GetBufferRid(1u, 0));
-
 		temperComputeCalc.computeShaderInstance.UpdateBuffer((float)delta, 0, 2);
 
-		// localShaderMaterial.SetShaderParameter("temperature_test", 90.0f);
+		// localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetBuffer(0));
 
-		// temperComputeCalc.UpdateCompute();
+
+		// localShaderMaterial.SetShaderParameter("temperature_texture", temperComputeCalc.computeShaderInstance.GetFloatArrayResult(0u, 3));
+
+
+		// localShaderMaterial.SetShaderParameter("temperature_test", 90.0f);
 
 		// localShaderMaterial.SetShaderParameter("temperature_data", temperComputeCalc.computeShaderInstance.GetFloatArrayResult(0));
 
 		temperComputeCalc.Calculate(delta);
 
-		// var getShaderParamTemp = (Rid)localShaderMaterial.GetShaderParameter("temperature_texture");
-		// var outputBytes = temperComputeCalc.computeShaderInstance.RD.BufferGetData(getShaderParamTemp);
-		// Print("Output: ", string.Join(", ", outputBytes));
+		// localShaderMaterial.SetShaderParameter("temperature_texture", TextureGenerate());
+		// localShaderMaterial.SetShaderParameter("temperature_texture", temperComputeCalc.computeShaderInstance.GetBufferRid(0u, 0));
+
+		// var outputBytes = temperComputeCalc.computeShaderInstance.RD.BufferGetData(temperComputeCalc.computeShaderInstance.GetBufferRid(0u, 3));
+		// Print("Output: ", string.Join(", ", temperComputeCalc.computeShaderInstance.GetFloatArrayResult(0u, 3)));
 		// Print();
 
-		// Print(localShaderMaterial.GetShaderParameter("temperature_texture"));
+		// Print("temperature_texture: ", string.Join(", ", localShaderMaterial.GetShaderParameter("temperature_texture")));
+
+		// Print("GetTexture2DrdBytes: ", string.Join(", ", temperComputeCalc.computeShaderInstance.GetTexture2DrdBytes(1u, 0)));
+
+	}
+
+	public Texture2D TextureGenerate()
+	{
+		// 这他妈的不对啊
+		var temperatureData = temperComputeCalc.computeShaderInstance.GetFloatArrayResult(0u, 3);
+
+
+		var textureImage = Image.CreateEmpty((int)Length * 6, (int)Length, false, Image.Format.Rf);
+
+
+		foreach (AreaOrientation orientation in Enum.GetValues(typeof(AreaOrientation)))
+		{
+			for (int i = 0; i < Length; i++)
+			{
+				for (int j = 0; j < Length; j++)
+				{
+
+					var id = (int)orientation * (int)Length * (int)Length + i * (int)Length + j;
+					textureImage.SetPixel((int)orientation * (int)Length + i, j, new Color(temperatureData[id], 0, 0, 0));
+				}
+			}
+		}
+
+		return ImageTexture.CreateFromImage(textureImage);
 	}
 
 	private void MapCellsToCube()

@@ -4,8 +4,8 @@
 
 layout(local_size_x=32,local_size_y=32,local_size_z=1)in;
 
-layout(set=0,binding=0,r32f)uniform restrict readonly image2D temperature_readonly;
-layout(set=1,binding=0,r32f)uniform restrict writeonly image2D temperature_writeonly;
+layout(set=0,binding=0,r32f)uniform restrict image2D temperature_readonly;
+// layout(set=1,binding=0,r32f)uniform restrict writeonly image2D temperature_writeonly;
 
 layout(set=0,binding=1,std430)restrict readonly buffer NeighborIndex{
     uvec4 data[];
@@ -15,9 +15,9 @@ layout(set=0,binding=2,std430)restrict buffer DeltaTime{
     float timestamp;
 }delta_time;
 
-layout(set=0,binding=3,std430)restrict buffer TemperatureTest{
-    float data[];
-}temp_test;
+// layout(set=0,binding=3,std430)restrict buffer TemperatureTest{
+//     float data[];
+// }temp_test;
 
 layout(push_constant,std430)uniform Params{
     int face_length;
@@ -107,6 +107,7 @@ void main(){
     
     float final_temp=T0+dt*(k1+2.*k2+2.*k3+k4)/6.;
     
-    temp_test.data[id]=final_temp;
-    imageStore(temperature_writeonly,ivec2(self_uv),vec4(final_temp,0,0,0));
+    imageStore(temperature_readonly,ivec2(self_uv),vec4(final_temp,final_temp,final_temp,1.0));
+
+    // temp_test.data[id]=imageLoad(temperature_readonly,ivec2(self_uv)).r;
 }

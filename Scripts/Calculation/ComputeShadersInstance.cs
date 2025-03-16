@@ -38,7 +38,8 @@ public class ComputeShaderInstance
 	private void InitializeShader(string path)
 	{
 		//加载着色器
-		RD = RenderingServer.CreateLocalRenderingDevice();
+		// RD = RenderingServer.CreateLocalRenderingDevice();
+		RD = RenderingServer.GetRenderingDevice();
 
 		RDShaderFile ComputeShaderFile = Load<RDShaderFile>(path);
 		if (ComputeShaderFile == null)
@@ -85,8 +86,8 @@ public class ComputeShaderInstance
 			sizeBytes: (uint)bytes.Length,
 			data: bytes
 		);
-		RD.Submit();
-		RD.Sync();
+		// RD.Submit();
+		// RD.Sync();
 	}
 
 	/// <summary>
@@ -165,7 +166,7 @@ public class ComputeShaderInstance
 			uniforms[set][binding] = rdUniform;
 			uniforms[set][binding].AddId(buffer.Value);
 
-			// Print("uniforms: ", string.Join(",", uniforms));
+			Print("uniforms: ", string.Join(",", uniforms));
 		}
 
 		foreach (var kvp in uniforms)
@@ -230,9 +231,21 @@ public class ComputeShaderInstance
 
 	public byte[] GetTexture2DrdBytes(uint set, int binding)
 	{
-		var outputBytes = RD.BufferGetData(Buffers[(set, binding)]);
+		var outputBytes = RD.TextureGetData(Buffers[(set, binding)], 0);
 		return outputBytes;
 	}
+
+	// public Texture2D GetTexture2DrdResult(uint set, int binding)
+	// {
+	// 	byte[] outputBytes = RD.TextureGetData(Buffers[(set, binding)], 0);
+
+	// 	Image image = new Image();
+	// 	var status = image.LoadPngFromBuffer(outputBytes);
+	// 	Print("GetTexture2DrdResult.status: ", status);
+
+	// 	Texture2D texture = ImageTexture.CreateFromImage(image);
+	// 	return texture;
+	// }
 
 	public Rid GetBufferRid(uint set, int binding)
 	{
