@@ -87,9 +87,6 @@ public class TemperatureComputeCalculator
 
 		Print("textureUpdateState: ", string.Join(", ", (textureRid, textureUpdateState)));
 
-
-		// Make sure our textures are cleared.
-
 		return textureRid;
 	}
 

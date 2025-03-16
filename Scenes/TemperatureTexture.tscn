@@ -51,6 +51,7 @@ spot_angle = 90.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CameraY/CameraX/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.23188, 0.684165, -1.29298)
+visible = false
 mesh = SubResource("QuadMesh_4p560")
 skeleton = NodePath("../../../..")
 
