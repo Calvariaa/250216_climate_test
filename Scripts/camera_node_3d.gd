@@ -24,7 +24,7 @@ var mouse_move_flag: bool = false
 var mouse_rotate_flag: bool = false
 var mouse_move_sensitivity: float = 0.1
 var mouse_rotation_sensitivity: float = 0.2
-var mouse_zoom_sensitivity: float = 0.2
+var mouse_zoom_sensitivity: float = 0.5
 func _update_camera(event: InputEvent) -> void:
 	# var distance_to_origin = camera.global_transform.origin.length()
 	var distance_to_origin = 1

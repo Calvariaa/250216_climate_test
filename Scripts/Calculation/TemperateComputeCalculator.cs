@@ -141,21 +141,7 @@ public class TemperatureComputeCalculator
 						{
 							neighborsId = (int)orientation * Length * Length + targetIMov * Length + targetJMov;
 							// LocalCellsNeighborsList[currentArrayIndex] = (uint)neighborsId;
-							switch (direction)
-							{
-								case AreaDirection.Up:
-									LocalCellsNeighborsVector[currentVectorIndex].X = (int)neighborsId;
-									break;
-								case AreaDirection.Down:
-									LocalCellsNeighborsVector[currentVectorIndex].Y = (int)neighborsId;
-									break;
-								case AreaDirection.Left:
-									LocalCellsNeighborsVector[currentVectorIndex].Z = (int)neighborsId;
-									break;
-								case AreaDirection.Right:
-									LocalCellsNeighborsVector[currentVectorIndex].W = (int)neighborsId;
-									break;
-							}
+							
 						}
 						else
 						{

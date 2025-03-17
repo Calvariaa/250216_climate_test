@@ -7,7 +7,8 @@
 render_priority = 0
 shader = ExtResource("2_koba8")
 shader_parameter/cell_length = 0
-shader_parameter/temperature_test = 0.0
+shader_parameter/radius = 1.0
+shader_parameter/line_width = 1.0
 
 [node name="PlaneMultiMesh" type="Node3D"]
 
