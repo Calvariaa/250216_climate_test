@@ -1,14 +1,31 @@
-[gd_scene load_steps=4 format=3 uid="uid://cdpmpfblvsu4n"]
+[gd_scene load_steps=9 format=3 uid="uid://jctqouwhs2o"]
 
 [ext_resource type="Script" uid="uid://cguifpylnb1u0" path="res://Scripts/camera_node_3d.gd" id="2_4oip7"]
 [ext_resource type="Shader" uid="uid://d3vdyni4b2du" path="res://Shaders/PlaneMultiMesh.gdshader" id="2_koba8"]
+[ext_resource type="Shader" uid="uid://c5qadt3e2xv5q" path="res://Shaders/TestQuad.gdshader" id="2_vmhkr"]
+[ext_resource type="Script" uid="uid://dniydk6c8x7gn" path="res://Scripts/SurfacesMultiMeshInstance3d.cs" id="3_koba8"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_koba8"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wi0ka"]
+render_priority = 0
+shader = ExtResource("2_vmhkr")
+shader_parameter/text_colour = Color(0.8, 0.85, 0.7, 1)
+shader_parameter/background_colour = Color(0, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_w7bg2"]
+material = SubResource("ShaderMaterial_wi0ka")
+size = Vector2(1, 0.5)
+subdivide_width = 200
+subdivide_depth = 200
+
+[sub_resource type="Texture2DRD" id="Texture2DRD_8nwxo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rrlbu"]
 render_priority = 0
 shader = ExtResource("2_koba8")
 shader_parameter/cell_length = 0
-shader_parameter/radius = 1.0
-shader_parameter/line_width = 1.0
+shader_parameter/temperature_texture = SubResource("Texture2DRD_8nwxo")
+shader_parameter/radius = 100.0
+shader_parameter/line_width = 0.02
 
 [node name="PlaneMultiMesh" type="Node3D"]
 
@@ -19,15 +36,21 @@ script = ExtResource("2_4oip7")
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraY/CameraX"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 100)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="CameraY/CameraX/Camera3D"]
-transform = Transform3D(-0.0579754, -0.993696, 0.0959503, 0.996778, -0.0522818, 0.0608273, -0.0554275, 0.0991677, 0.993526, 0.801308, -0.473215, 3.46323)
-spot_range = 1868.73
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+spot_range = 2000.0
 spot_attenuation = 0.0
+spot_angle = 90.0
 
-[node name="CameraLightNode3D" type="Node3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, -0.5, 0.866025, -2.18557e-08, -0.866025, -0.5, -3.78552e-08, 0, 1, 2)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CameraY/CameraX/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.23188, 0.684165, -1.29298)
+visible = false
+mesh = SubResource("QuadMesh_w7bg2")
+skeleton = NodePath("../../../..")
 
-[node name="CellsBaseMultiMeshInstance" type="MultiMeshInstance3D" parent="."]
-material_override = SubResource("ShaderMaterial_koba8")
+[node name="SurfacesMultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_rrlbu")
+script = ExtResource("3_koba8")
+ComputePath = "res://ComputeShaders/TemperatureCalculatorRK4.glsl"

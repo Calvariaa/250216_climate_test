@@ -5,25 +5,25 @@
 [ext_resource type="Script" uid="uid://dniydk6c8x7gn" path="res://Scripts/SurfacesMultiMeshInstance3d.cs" id="3_8nwxo"]
 [ext_resource type="Shader" uid="uid://c5qadt3e2xv5q" path="res://Shaders/TestQuad.gdshader" id="4_5youu"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wi0ka"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5youu"]
 render_priority = 0
 shader = ExtResource("4_5youu")
 shader_parameter/text_colour = Color(0.8, 0.85, 0.7, 1)
 shader_parameter/background_colour = Color(0, 0, 0, 1)
 
 [sub_resource type="QuadMesh" id="QuadMesh_4p560"]
-material = SubResource("ShaderMaterial_wi0ka")
+material = SubResource("ShaderMaterial_5youu")
 size = Vector2(1, 0.5)
 subdivide_width = 200
 subdivide_depth = 200
 
-[sub_resource type="Texture2DRD" id="Texture2DRD_8nwxo"]
+[sub_resource type="Texture2DRD" id="Texture2DRD_wi0ka"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8nwxo"]
 render_priority = 0
 shader = ExtResource("2_k3lqd")
 shader_parameter/cell_length = 0
-shader_parameter/temperature_texture = SubResource("Texture2DRD_8nwxo")
+shader_parameter/temperature_texture = SubResource("Texture2DRD_wi0ka")
 shader_parameter/radius = 100.0
 shader_parameter/line_width = 0.02
 

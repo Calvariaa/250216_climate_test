@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="250216_climate_test"
-run/main_scene="uid://bba0cjfoheye"
+run/main_scene="uid://jctqouwhs2o"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 

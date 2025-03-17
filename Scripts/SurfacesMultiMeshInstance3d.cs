@@ -7,10 +7,12 @@ using System.Diagnostics;
 public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 {
 	[Export] private string ComputePath;
-	[Export] float CellSize = 0.1f;
+	[Export] float MeshSize = 1.0f;
 	[Export(PropertyHint.Range, "32,1024,32,or_greater")] uint Length = 32; //  范围是大于等于32且为32倍数
 	[Export(PropertyHint.ExpEasing)] float Alpha = 1e-4F;
 
+
+	private float CellSize { get { return MeshSize * 48 / Length; } }
 	private TemperatureComputeCalculator temperComputeCalc;
 	private SurfaceAreaCells cells;
 	private ShaderMaterial localShaderMaterial;
