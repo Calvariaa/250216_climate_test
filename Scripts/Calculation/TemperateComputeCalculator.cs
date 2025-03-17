@@ -146,7 +146,7 @@ public class TemperatureComputeCalculator
 						else
 						{
 							var localTargetI = SurfaceCells.GetRotatedI(i % (int)Length, j, Length, targetNeighbor.Rotation);
-							var localTargetJ = SurfaceCells.GetRotatedI(i % (int)Length, j, Length, targetNeighbor.Rotation);
+							var localTargetJ = SurfaceCells.GetRotatedJ(i % (int)Length, j, Length, targetNeighbor.Rotation);
 
 							neighborsId = (int)orientation * Length * Length
 							+ (i + iOffset * Length + localTargetI + directionTable[(int)direction, 1] * (1 - Length)) * Length
