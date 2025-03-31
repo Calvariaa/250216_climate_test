@@ -10,17 +10,10 @@ uniform float radius = 1;
 uniform float line_width = 1; // 控制线段的宽度
 
 uvec2 id_to_uv(uint id) {
-    // 32 * 32 * 6 = 6144
-
-    // 3238
-
-    // 32
     uint face_size = cell_length;
 
-    // 3238 / (1024) = 3
     uint face_id = id / (face_size * face_size);
 
-    // 3238 % (1024) = 166
     uint local_id = id % (face_size * face_size);
     return uvec2(
         face_id * face_size + (local_id % face_size),
@@ -49,7 +42,7 @@ void vertex() {
 
     // Normalize UV coordinates to [0, 1] range
     // vec2 normalized_uv = vec2(uv) / float(cell_length * 6u);
-    vec2 normalized_uv = vec2(texture_uv) / vec2(float(cell_length) * 6.f, float(cell_length));
+    vec2 normalized_uv =(vec2(texture_uv) + vec2(.5,.5)) / vec2(float(cell_length) * 6.f, float(cell_length));
 
     // Sample the temperature from the texture
     float temperature = texture(temperature_texture, normalized_uv).r;

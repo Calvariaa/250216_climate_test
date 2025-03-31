@@ -27,13 +27,16 @@ layout(push_constant,std430)uniform Params{
 float dx2_inv=float(400<<1);
 
 // id to texture uv
-uvec2 id_to_uv(uint id){
-    uint face_size=const_param.face_length;
-    uint face_id=id/(face_size*face_size);
-    uint local_id=id%(face_size*face_size);
+
+uvec2 id_to_uv(uint id) {
+    uint face_size = const_param.face_length;
+
+    uint face_id = id / (face_size * face_size);
+
+    uint local_id = id % (face_size * face_size);
     return uvec2(
-        face_id*face_size+(local_id%face_size),
-        local_id/face_size
+        face_id * face_size + (local_id % face_size),
+        local_id / face_size
     );
 }
 
@@ -46,18 +49,13 @@ float computeHeatEquation(uint id,float temp_self,float temp_left,float temp_rig
 // https://i.imgur.com/RIlJM32.png
 // https://zhuanlan.zhihu.com/p/8616433050
 void main(){
-    uint x=gl_GlobalInvocationID.x;
-    uint y=gl_GlobalInvocationID.y;
-    uint z=gl_GlobalInvocationID.z;
+    uint id = gl_GlobalInvocationID.x +
+            gl_GlobalInvocationID.y * gl_WorkGroupSize.x * gl_NumWorkGroups.x +
+            gl_GlobalInvocationID.z * gl_WorkGroupSize.x * gl_NumWorkGroups.x * gl_WorkGroupSize.y * gl_NumWorkGroups.y;
     
-    uint id=gl_GlobalInvocationID.x+
-    gl_GlobalInvocationID.y*(gl_NumWorkGroups.x*gl_WorkGroupSize.x)+
-    gl_GlobalInvocationID.z*(gl_NumWorkGroups.x*gl_WorkGroupSize.x)*
-    (gl_NumWorkGroups.y*gl_WorkGroupSize.y);
-    
-    // if(id>=const_param.face_length*const_param.face_length*6){
-        //     return;
-    // }
+    if(id>const_param.face_length*const_param.face_length*6){
+            return;
+    }
     
     float dt=delta_time.timestamp;
     
@@ -70,6 +68,7 @@ void main(){
     
     // get id for texture
     uvec2 self_uv=id_to_uv(id);
+
     float T0=imageLoad(temperature,ivec2(self_uv)).r;
     
     // neighbors
@@ -108,7 +107,16 @@ void main(){
     float k4=computeHeatEquation(id,T_k4,k4_temp_left,k4_temp_right,k4_temp_bottom,k4_temp_top);
     
     float final_temp=T0+dt*(k1+2.*k2+2.*k3+k4)/6.;
-    
+
+    // if (id<const_param.face_length*const_param.face_length*5){
+    //     final_temp=120.;
+    // } else{
+    //     final_temp=0.;
+    // }
+
+    // if (self_uv.x == 30)
+    //     final_temp = 120.0;
+    // final_temp=id%240-120;
     imageStore(temperature,ivec2(self_uv),vec4(final_temp,final_temp,final_temp,1.));
     
     // temp_test.data[id]=imageLoad(temperature,ivec2(self_uv)).r;
