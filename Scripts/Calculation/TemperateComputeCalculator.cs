@@ -141,17 +141,28 @@ public class TemperatureComputeCalculator
 						{
 							neighborsId = (int)orientation * Length * Length + targetIMov * Length + targetJMov;
 							// LocalCellsNeighborsList[currentArrayIndex] = (uint)neighborsId;
-							
+
 						}
 						else
 						{
-							var localTargetI = SurfaceCells.GetRotatedI(i % (int)Length, j, Length, targetNeighbor.Rotation);
-							var localTargetJ = SurfaceCells.GetRotatedJ(i % (int)Length, j, Length, targetNeighbor.Rotation);
+							// 如果超过了边界，就要计算目标邻居的坐标
+							// 这里的localTargetI和localTargetJ
 
-							neighborsId = (int)orientation * Length * Length
-							+ (i + iOffset * Length + localTargetI + directionTable[(int)direction, 1] * (1 - Length)) * Length
-							+ (j + localTargetJ + directionTable[(int)direction, 0] * (1 - Length));
-							// LocalCellsNeighborsList[currentArrayIndex] = (uint)neighborsId;
+							var localTargetI = SurfaceCells.GetRotatedI((targetIMov + directionTable[(int)direction, 1] * (1 - (int)Length)) % (int)Length, targetJMov, Length, targetNeighbor.Rotation);
+							var localTargetJ = SurfaceCells.GetRotatedJ((targetIMov + directionTable[(int)direction, 0] * (1 - (int)Length)) % (int)Length, targetJMov, Length, targetNeighbor.Rotation);
+
+							// var localTargetI = targetIMov % (int)Length;
+							// var localTargetJ = targetJMov;
+
+							targetIMov = localTargetI + iOffset * (int)Length;
+							targetJMov = localTargetJ;
+
+
+							// neighborsId = (int)(orientation + iOffset) * Length * Length
+							// + (localTargetI + directionTable[(int)direction, 1] * (1 - Length)) * Length
+							// + (localTargetJ + directionTable[(int)direction, 0] * (1 - Length));
+
+							neighborsId = (int)orientation * Length * Length + targetIMov * Length + targetJMov;
 						}
 
 						switch (direction)

@@ -2,7 +2,7 @@ namespace _Climate.Scripts;
 
 using System;
 using System.Collections.Generic;
-
+using Godot;
 
 public enum AreaOrientation : int
 {
@@ -104,44 +104,44 @@ public class SurfaceAreaCells
 			[AreaOrientation.Up] = new Dictionary<AreaDirection, (AreaOrientation, int)>
 			{
 				{ AreaDirection.Up,    (AreaOrientation.Backward, 0) },
-				{ AreaDirection.Down,  (AreaOrientation.Forward, 2) },
-				{ AreaDirection.Left,  (AreaOrientation.Left,     3) },
-				{ AreaDirection.Right, (AreaOrientation.Right,    1) }
-			},
-			[AreaOrientation.Down] = new Dictionary<AreaDirection, (AreaOrientation, int)>
-			{
-				{ AreaDirection.Up,    (AreaOrientation.Forward,  0) },
-				{ AreaDirection.Down,  (AreaOrientation.Backward, 2) },
-				{ AreaDirection.Left,  (AreaOrientation.Left,     1) },
-				{ AreaDirection.Right, (AreaOrientation.Right,    3) }
-			},
-			[AreaOrientation.Left] = new Dictionary<AreaDirection, (AreaOrientation, int)>
-			{
-				{ AreaDirection.Up,    (AreaOrientation.Up,      1) },
-				{ AreaDirection.Down,  (AreaOrientation.Down,    3) },
-				{ AreaDirection.Left,  (AreaOrientation.Backward, 2) },
-				{ AreaDirection.Right, (AreaOrientation.Forward,   0) }
-			},
-			[AreaOrientation.Right] = new Dictionary<AreaDirection, (AreaOrientation, int)>
-			{
-				{ AreaDirection.Up,    (AreaOrientation.Up,     3) },
-				{ AreaDirection.Down,  (AreaOrientation.Down,    1) },
-				{ AreaDirection.Left,  (AreaOrientation.Forward,  0) },
-				{ AreaDirection.Right, (AreaOrientation.Backward,2) }
-			},
-			[AreaOrientation.Forward] = new Dictionary<AreaDirection, (AreaOrientation, int)>
-			{
-				{ AreaDirection.Up,    (AreaOrientation.Up,     2) },
-				{ AreaDirection.Down,  (AreaOrientation.Down,     0) },
+				{ AreaDirection.Down,  (AreaOrientation.Forward,  0) },
 				{ AreaDirection.Left,  (AreaOrientation.Left,     0) },
 				{ AreaDirection.Right, (AreaOrientation.Right,    0) }
 			},
+			[AreaOrientation.Down] = new Dictionary<AreaDirection, (AreaOrientation, int)>
+			{
+				{ AreaDirection.Up,    (AreaOrientation.Backward, 	 2) },
+				{ AreaDirection.Down,  (AreaOrientation.Forward, 	2) },
+				{ AreaDirection.Left,  (AreaOrientation.Left,   	  0) },
+				{ AreaDirection.Right, (AreaOrientation.Right,   	 0) }
+			},
+			[AreaOrientation.Left] = new Dictionary<AreaDirection, (AreaOrientation, int)>
+			{
+				{ AreaDirection.Up,    (AreaOrientation.Backward,      3) },
+				{ AreaDirection.Down,  (AreaOrientation.Forward,    1) },
+				{ AreaDirection.Left,  (AreaOrientation.Down, 		0) },
+				{ AreaDirection.Right, (AreaOrientation.Up,  		 0) }
+			},
+			[AreaOrientation.Right] = new Dictionary<AreaDirection, (AreaOrientation, int)>
+			{
+				{ AreaDirection.Up,    (AreaOrientation.Backward,     1) },
+				{ AreaDirection.Down,  (AreaOrientation.Down,  		  3) },
+				{ AreaDirection.Left,  (AreaOrientation.Up, 		 0) },
+				{ AreaDirection.Right, (AreaOrientation.Down,		0) }
+			},
+			[AreaOrientation.Forward] = new Dictionary<AreaDirection, (AreaOrientation, int)>
+			{
+				{ AreaDirection.Up,    (AreaOrientation.Up,     0) },
+				{ AreaDirection.Down,  (AreaOrientation.Down,     2) },
+				{ AreaDirection.Left,  (AreaOrientation.Left,     3) },
+				{ AreaDirection.Right, (AreaOrientation.Right,    1) }
+			},
 			[AreaOrientation.Backward] = new Dictionary<AreaDirection, (AreaOrientation, int)>
 			{
-				{ AreaDirection.Up,    (AreaOrientation.Up,       0) },
-				{ AreaDirection.Down,  (AreaOrientation.Down,    2) },
-				{ AreaDirection.Left,  (AreaOrientation.Right,    0) },
-				{ AreaDirection.Right, (AreaOrientation.Left,     0) }
+				{ AreaDirection.Up,    (AreaOrientation.Down,       2) },
+				{ AreaDirection.Down,  (AreaOrientation.Up,         0) },
+				{ AreaDirection.Left,  (AreaOrientation.Left,       1) },
+				{ AreaDirection.Right, (AreaOrientation.Right,      3) }
 			}
 		};
 
@@ -155,6 +155,8 @@ public class SurfaceAreaCells
 				AreaDirection dir = entry.Key;
 				AreaOrientation neighborFace = entry.Value.Item1;
 				int rotation = entry.Value.Item2;
+
+				GD.Print($"face: {face}, dir: {dir}, neighborFace: {neighborFace}, rotation: {rotation}");
 
 				currentNode.Neighbors[dir] = (surfaceCellNodes[neighborFace], rotation);
 			}
