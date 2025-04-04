@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://jctqouwhs2o"]
 
-[ext_resource type="Script" uid="uid://cguifpylnb1u0" path="res://Scripts/camera_node_3d.gd" id="2_4oip7"]
+[ext_resource type="Script" uid="uid://cji0wqkoetvq7" path="res://Scripts/CameraController.cs" id="1_vmhkr"]
 [ext_resource type="Shader" uid="uid://d3vdyni4b2du" path="res://Shaders/PlaneMultiMesh.gdshader" id="2_koba8"]
 [ext_resource type="Shader" uid="uid://c5qadt3e2xv5q" path="res://Shaders/TestQuad.gdshader" id="2_vmhkr"]
 [ext_resource type="Script" uid="uid://dniydk6c8x7gn" path="res://Scripts/SurfacesMultiMeshInstance3d.cs" id="3_koba8"]
@@ -30,7 +30,7 @@ shader_parameter/line_width = 0.02
 [node name="PlaneMultiMesh" type="Node3D"]
 
 [node name="CameraY" type="Node3D" parent="."]
-script = ExtResource("2_4oip7")
+script = ExtResource("1_vmhkr")
 
 [node name="CameraX" type="Node3D" parent="CameraY"]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
