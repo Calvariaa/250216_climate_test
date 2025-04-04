@@ -50,7 +50,7 @@ public class SurfaceCells
 			case 3:
 				return j;
 			default:
-				return -1;
+				return 0;
 		}
 	}
 
@@ -68,7 +68,7 @@ public class SurfaceCells
 			case 3:
 				return (int)length - i - 1;
 			default:
-				return -1;
+				return 0;
 		}
 	}
 	public Cell Cell(int i, int j, int rotation)

@@ -112,8 +112,8 @@ public class SurfaceAreaCells
 			{
 				{ AreaDirection.Up,    (AreaOrientation.Backward, 	 2) },
 				{ AreaDirection.Down,  (AreaOrientation.Forward, 	2) },
-				{ AreaDirection.Left,  (AreaOrientation.Left,   	  0) },
-				{ AreaDirection.Right, (AreaOrientation.Right,   	 0) }
+				{ AreaDirection.Left,  (AreaOrientation.Right,   	  0) },
+				{ AreaDirection.Right, (AreaOrientation.Left,   	 0) }
 			},
 			[AreaOrientation.Left] = new Dictionary<AreaDirection, (AreaOrientation, int)>
 			{
@@ -125,7 +125,7 @@ public class SurfaceAreaCells
 			[AreaOrientation.Right] = new Dictionary<AreaDirection, (AreaOrientation, int)>
 			{
 				{ AreaDirection.Up,    (AreaOrientation.Backward,     1) },
-				{ AreaDirection.Down,  (AreaOrientation.Down,  		  3) },
+				{ AreaDirection.Down,  (AreaOrientation.Forward,  		  3) },
 				{ AreaDirection.Left,  (AreaOrientation.Up, 		 0) },
 				{ AreaDirection.Right, (AreaOrientation.Down,		0) }
 			},

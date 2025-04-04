@@ -127,7 +127,7 @@ public class TemperatureComputeCalculator
 					var currentVectorIndex = (int)orientation * Length * Length + i * Length + j;
 					foreach (AreaDirection direction in Enum.GetValues(typeof(AreaDirection)))
 					{
-						var currentArrayIndex = (int)orientation * Length * Length * 4 + i * Length * 4 + j * 4 + (int)direction;
+						// var currentArrayIndex = (int)orientation * Length * Length * 4 + i * Length * 4 + j * 4 + (int)direction;
 
 						var targetIMov = i + directionTable[(int)direction, 1];
 						var targetJMov = j + directionTable[(int)direction, 0];
@@ -151,11 +151,24 @@ public class TemperatureComputeCalculator
 							var localTargetI = SurfaceCells.GetRotatedI((targetIMov + directionTable[(int)direction, 1] * (1 - (int)Length)) % (int)Length, targetJMov, Length, targetNeighbor.Rotation);
 							var localTargetJ = SurfaceCells.GetRotatedJ((targetIMov + directionTable[(int)direction, 0] * (1 - (int)Length)) % (int)Length, targetJMov, Length, targetNeighbor.Rotation);
 
+
 							// var localTargetI = targetIMov % (int)Length;
 							// var localTargetJ = targetJMov;
 
+							// targetIMov = (targetIMov + directionTable[(int)direction, 1] * (1 - (int)Length)) % (int)Length + iOffset * (int)Length;
+							// targetJMov = targetJMov;
+
+							
+
 							targetIMov = localTargetI + iOffset * (int)Length;
 							targetJMov = localTargetJ;
+
+							// 上
+							// if (currentVectorIndex / (Length * Length) == 3u && (currentVectorIndex % (Length * Length)) < Length / 2)
+							// {
+							// 	GD.Print("currentVectorIndex: ", currentVectorIndex, " orientation: ", orientation, " direction: ", direction, " i: ", i, " j: ", j, " targetIMov: ", targetIMov, " targetJMov: ", targetJMov);
+							// 	GD.Print("targetIMov: ", targetIMov, " targetJMov: ", targetJMov, " iOffset: ", iOffset);
+							// }
 
 
 							// neighborsId = (int)(orientation + iOffset) * Length * Length
@@ -163,6 +176,13 @@ public class TemperatureComputeCalculator
 							// + (localTargetJ + directionTable[(int)direction, 0] * (1 - Length));
 
 							neighborsId = (int)orientation * Length * Length + targetIMov * Length + targetJMov;
+							// 右边
+							if (currentVectorIndex / (Length * Length) == 5u && currentVectorIndex % (Length) == (Length - 1u))
+							{
+								GD.Print("currentVectorIndex: ", currentVectorIndex, " orientation: ", orientation, " direction: ", direction, " i: ", i, " j: ", j, " targetIMov: ", targetIMov, " targetJMov: ", targetJMov);
+								GD.Print("targetIMov: ", targetIMov, " targetJMov: ", targetJMov, " iOffset: ", iOffset);
+								GD.Print("neighborsId: ", neighborsId);
+							}
 						}
 
 						switch (direction)

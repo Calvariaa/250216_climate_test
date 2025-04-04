@@ -94,18 +94,18 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 					{
 						case AreaOrientation.Up:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f),
+								(j - (Length - 1) / 2.0f),
 								((Length) / 2.0f),
-								(j - (Length - 1) / 2.0f)
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							rotation_axis = new Vector3(0, 0, 0);
 							rotation_angle = 0;
 							break;
 						case AreaOrientation.Down:
 							position = new Vector3(
-								-(i - (Length - 1) / 2.0f),
+								-(j - (Length - 1) / 2.0f),
 								(-(Length) / 2.0f),
-								(j - (Length - 1) / 2.0f)
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							rotation_axis = new Vector3(1, 0, 0);
 							rotation_angle = (float)Math.PI;
@@ -113,8 +113,8 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 						case AreaOrientation.Left:
 							position = new Vector3(
 								(-(Length) / 2.0f),
-								(i - (Length - 1) / 2.0f),
-								(j - (Length - 1) / 2.0f)
+								(j - (Length - 1) / 2.0f),
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							rotation_axis = new Vector3(0, 0, 1);
 							rotation_angle = (float)(Math.PI / 2.0);
@@ -122,16 +122,16 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 						case AreaOrientation.Right:
 							position = new Vector3(
 								((Length) / 2.0f),
-								-(i - (Length - 1) / 2.0f),
-								(j - (Length - 1) / 2.0f)
+								-(j - (Length - 1) / 2.0f),
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							rotation_axis = new Vector3(0, 0, 1);
 							rotation_angle = -(float)(Math.PI / 2.0);
 							break;
 						case AreaOrientation.Forward:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f),
-								-(j - (Length - 1) / 2.0f),
+								(j - (Length - 1) / 2.0f),
+								-(i - (Length - 1) / 2.0f),
 								((Length) / 2.0f)
 							) * CellSize;
 							rotation_axis = new Vector3(1, 0, 0);
@@ -139,8 +139,8 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 							break;
 						case AreaOrientation.Backward:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f),
 								(j - (Length - 1) / 2.0f),
+								(i - (Length - 1) / 2.0f),
 								(-(Length) / 2.0f)
 							) * CellSize;
 							rotation_axis = new Vector3(1, 0, 0);
@@ -175,44 +175,44 @@ public partial class SurfacesMultiMeshInstance3d : MultiMeshInstance3D
 					{
 						case AreaOrientation.Up:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f),
+								(j - (Length - 1) / 2.0f),
 								0,
-								(j - (Length - 1) / 2.0f)
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							break;
 						case AreaOrientation.Down:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f + Length * 2),
+								(j - (Length - 1) / 2.0f + Length * 2),
 								0,
-								(j - (Length - 1) / 2.0f)
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							break;
 						case AreaOrientation.Left:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f - Length),
+								(j - (Length - 1) / 2.0f - Length),
 								0,
-								(j - (Length - 1) / 2.0f)
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							break;
 						case AreaOrientation.Right:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f + Length),
+								(j - (Length - 1) / 2.0f + Length),
 								0,
-								(j - (Length - 1) / 2.0f)
+								(i - (Length - 1) / 2.0f)
 							) * CellSize;
 							break;
 						case AreaOrientation.Forward:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f),
+								(j - (Length - 1) / 2.0f),
 								0,
-								(j - (Length - 1) / 2.0f + Length)
+								(i - (Length - 1) / 2.0f + Length)
 							) * CellSize;
 							break;
 						case AreaOrientation.Backward:
 							position = new Vector3(
-								(i - (Length - 1) / 2.0f),
+								(j - (Length - 1) / 2.0f),
 								0,
-								(j - (Length - 1) / 2.0f - Length)
+								(i - (Length - 1) / 2.0f - Length)
 							) * CellSize;
 							break;
 						default:
