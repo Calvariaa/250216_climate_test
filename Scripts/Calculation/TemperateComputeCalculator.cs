@@ -148,8 +148,8 @@ public class TemperatureComputeCalculator
 							// 如果超过了边界，就要计算目标邻居的坐标
 							// 这里的localTargetI和localTargetJ
 
-							var localTargetI = SurfaceCells.GetRotatedI((targetIMov + directionTable[(int)direction, 1] * (1 - (int)Length)) % (int)Length, targetJMov, Length, targetNeighbor.Rotation);
-							var localTargetJ = SurfaceCells.GetRotatedJ((targetIMov + directionTable[(int)direction, 0] * (1 - (int)Length)) % (int)Length, targetJMov, Length, targetNeighbor.Rotation);
+							var localTargetI = SurfaceCells.GetRotatedI((targetIMov + directionTable[(int)direction, 1] * (1 - (int)Length)), targetJMov, Length, targetNeighbor.Rotation) % (int)Length;
+							var localTargetJ = SurfaceCells.GetRotatedJ((targetIMov + directionTable[(int)direction, 0] * (1 - (int)Length)), targetJMov, Length, targetNeighbor.Rotation) % (int)Length;
 
 
 							// var localTargetI = targetIMov % (int)Length;

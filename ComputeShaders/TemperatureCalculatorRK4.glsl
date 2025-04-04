@@ -109,35 +109,35 @@ void main(){
     float k4=computeHeatEquation(id,T_k4,k4_temp_left,k4_temp_right,k4_temp_bottom,k4_temp_top);
     
     float final_temp=T0+dt*(k1+2.*k2+2.*k3+k4)/6.;
-
+    
     // if(id>=const_param.face_length*const_param.face_length*0&&id<const_param.face_length*const_param.face_length*1){
-    //         final_temp=120.;
+        //         final_temp=120.;
     // }
-
+    
     // 面的上边
-    // if(id/(const_param.face_length*const_param.face_length)==0u&&id%(const_param.face_length)==(const_param.face_length-1u)){
-    //     final_temp=120.;
+    // if(id/(const_param.face_length*const_param.face_length)==3u&&((id%(const_param.face_length*const_param.face_length))/const_param.face_length)==0u){
+        //     final_temp=120.;
     // }
-
+    
     // 面的左边
     // if(id/(const_param.face_length*const_param.face_length)==0u&&id%(const_param.face_length)==0u){
-    //     final_temp=120.;
+        //     final_temp=120.;
     // }
-
+    
     // 面的下边
     // if(id/(const_param.face_length*const_param.face_length)==0u&&id<const_param.face_length*const_param.face_length-12){
-    //     final_temp=120.;
+        //     final_temp=120.;
     // }
-
+    
     // 面的右边
     // if(id/(const_param.face_length*const_param.face_length)==0u&&id%(const_param.face_length)==(const_param.face_length-1u)){
-    //     final_temp=120.;
+        //     final_temp=120.;
     // }
-
+    
     // else{
-    //         final_temp=0.;
+        //         final_temp=0.;
     // }
-
+    
     // if (self_uv.x == 30)
     //     final_temp = 120.0;
     // final_temp=id%240-120;
