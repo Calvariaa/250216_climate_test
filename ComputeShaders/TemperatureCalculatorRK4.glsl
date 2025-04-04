@@ -24,9 +24,7 @@ layout(push_constant,std430)uniform Params{
 }const_param;
 
 // 节点间距 dx = 0.0025
-// float dx2_inv=float(400<<1);
-// 节点间距 dx = 0.00025
-float dx2_inv=float(4000<<1);
+float dx2_inv=float(400<<1);
 
 // id to texture uv
 

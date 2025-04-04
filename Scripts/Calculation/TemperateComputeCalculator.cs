@@ -146,43 +146,15 @@ public class TemperatureComputeCalculator
 						else
 						{
 							// 如果超过了边界，就要计算目标邻居的坐标
-							// 这里的localTargetI和localTargetJ
-
+							// 这里的localTargetI和localTargetJ是旋转后的坐标
 							var localTargetI = SurfaceCells.GetRotatedI((targetIMov + directionTable[(int)direction, 1] * (1 - (int)Length)), targetJMov, Length, targetNeighbor.Rotation) % (int)Length;
 							var localTargetJ = SurfaceCells.GetRotatedJ((targetIMov + directionTable[(int)direction, 0] * (1 - (int)Length)), targetJMov, Length, targetNeighbor.Rotation) % (int)Length;
 
 
-							// var localTargetI = targetIMov % (int)Length;
-							// var localTargetJ = targetJMov;
-
-							// targetIMov = (targetIMov + directionTable[(int)direction, 1] * (1 - (int)Length)) % (int)Length + iOffset * (int)Length;
-							// targetJMov = targetJMov;
-
-							
-
 							targetIMov = localTargetI + iOffset * (int)Length;
 							targetJMov = localTargetJ;
 
-							// 上
-							// if (currentVectorIndex / (Length * Length) == 3u && (currentVectorIndex % (Length * Length)) < Length / 2)
-							// {
-							// 	GD.Print("currentVectorIndex: ", currentVectorIndex, " orientation: ", orientation, " direction: ", direction, " i: ", i, " j: ", j, " targetIMov: ", targetIMov, " targetJMov: ", targetJMov);
-							// 	GD.Print("targetIMov: ", targetIMov, " targetJMov: ", targetJMov, " iOffset: ", iOffset);
-							// }
-
-
-							// neighborsId = (int)(orientation + iOffset) * Length * Length
-							// + (localTargetI + directionTable[(int)direction, 1] * (1 - Length)) * Length
-							// + (localTargetJ + directionTable[(int)direction, 0] * (1 - Length));
-
 							neighborsId = (int)orientation * Length * Length + targetIMov * Length + targetJMov;
-							// 右边
-							if (currentVectorIndex / (Length * Length) == 5u && currentVectorIndex % (Length) == (Length - 1u))
-							{
-								GD.Print("currentVectorIndex: ", currentVectorIndex, " orientation: ", orientation, " direction: ", direction, " i: ", i, " j: ", j, " targetIMov: ", targetIMov, " targetJMov: ", targetJMov);
-								GD.Print("targetIMov: ", targetIMov, " targetJMov: ", targetJMov, " iOffset: ", iOffset);
-								GD.Print("neighborsId: ", neighborsId);
-							}
 						}
 
 						switch (direction)
