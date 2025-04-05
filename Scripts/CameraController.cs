@@ -120,4 +120,31 @@ public partial class CameraController : Node3D
 			}
 		}
 	}
+
+	// private void CheckMousePos()
+	// {
+	// 	var camera = GetViewport().GetCamera3D();
+	// 	var parameters = new PhysicsRayQueryParameters3D()
+	// 	{
+	// 		From = camera.ProjectRayOrigin(mousePos),
+	// 		To = camera.ProjectRayOrigin(mousePos) + camera.ProjectRayNormal(mousePos) * 100.0f,
+	// 		CollisionMask = 1,
+	// 		CollideWithBodies = false,
+	// 		CollideWithAreas = true
+	// 	};
+
+
+	// 	var result = GetWorld3D().DirectSpaceState.IntersectRay(parameters);
+	// 	if (result.Count > 0)
+	// 	{
+	// 		var pos = GlobalTransform.AffineInverse() * ((Vector3)result["position"]);
+	// 		addWavePoint.X = Mathf.Clamp(pos.X / 5.0f, -0.5f, 0.5f) * TextureSize.X + 0.5f * TextureSize.X;
+	// 		addWavePoint.Y = Mathf.Clamp(pos.Z / 5.0f, -0.5f, 0.5f) * TextureSize.Y + 0.5f * TextureSize.Y;
+	// 		addWavePoint.W = 1.0f;
+	// 	}
+	// 	else
+	// 	{
+	// 		addWavePoint = Vector4.Zero;
+	// 	}
+	// }
 }
